@@ -51,4 +51,8 @@ public enum WorldEntity {
     public String toString() {
         return ""+code;
     }
+    
+    public boolean isCrossable() {
+    	return this!=Stone && this!= Tree;
+    }
 }

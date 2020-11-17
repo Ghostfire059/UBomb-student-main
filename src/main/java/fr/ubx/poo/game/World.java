@@ -36,6 +36,10 @@ public class World {
         return grid.get(position);
     }
 
+    public WorldEntity getEntity(Position pos) {
+    	return raw[pos.y][pos.x];
+    }
+    	
     public void set(Position position, Decor decor) {
         grid.put(position, decor);
     }
