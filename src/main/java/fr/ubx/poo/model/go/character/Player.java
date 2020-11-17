@@ -45,7 +45,7 @@ public class Player extends GameObject implements Movable {
     public boolean canMove(Direction direction) {
     	Position nextPos = direction.nextPosition(getPosition());
     	WorldEntity object = game.getWorld().getEntity(nextPos);
-    	return nextPos.inside(game.getWorld().dimension) && object!=WorldEntity.Tree && object.isCrossable();
+    	return nextPos.inside(game.getWorld().dimension) && object.isCrossable();
     }
 
     public void doMove(Direction direction) {
