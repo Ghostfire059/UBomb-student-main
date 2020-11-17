@@ -8,7 +8,6 @@ import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.WorldEntity;
 import fr.ubx.poo.model.Movable;
-import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
 
