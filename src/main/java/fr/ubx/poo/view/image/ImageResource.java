@@ -27,6 +27,10 @@ public enum ImageResource {
 	PRINCESS("bomberwoman.png"),
 	DOORCLOSED("door_closed.png"),
 	DOOROPENED("door_opened.png"),
+	BOMBNBINC("bonus_bomb_nb_inc.png"),
+	BOMBNBDEC("bonus_bomb_nb_dec.png"),
+	BOMBRNGINC("bonus_bomb_range_inc.png"),
+	BOMBRNGDEC("bonus_bomb_range_dec.png"),
     ;
 
     private final String FileName;
