@@ -13,7 +13,7 @@ import fr.ubx.poo.game.Game;
 
 public class Player extends GameObject implements Movable {
 
-    private final boolean alive = true;
+    private boolean alive = true;
     Direction direction;
     private boolean moveRequested = false;
     private int lives = 1;
@@ -49,6 +49,16 @@ public class Player extends GameObject implements Movable {
 
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
+    	WorldEntity object = game.getWorld().getEntity(nextPos);
+        if( object.getCode() == 'W') {
+        	this.winner = true;
+        }
+        if( object.getCode() == 'M') {
+        	this.lives = this.lives - 1;
+        	if( this.lives == 0) {
+        		this.alive = false;
+        	}
+        }
         setPosition(nextPos);
     }
 
