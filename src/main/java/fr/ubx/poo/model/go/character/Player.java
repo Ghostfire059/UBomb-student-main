@@ -4,16 +4,6 @@
 
 package fr.ubx.poo.model.go.character;
 
-import static fr.ubx.poo.view.image.ImageResource.BOMBNBDEC;
-import static fr.ubx.poo.view.image.ImageResource.BOMBNBINC;
-import static fr.ubx.poo.view.image.ImageResource.BOMBRNGDEC;
-import static fr.ubx.poo.view.image.ImageResource.BOMBRNGINC;
-import static fr.ubx.poo.view.image.ImageResource.DOORCLOSED;
-import static fr.ubx.poo.view.image.ImageResource.DOOROPENED;
-import static fr.ubx.poo.view.image.ImageResource.HEART;
-import static fr.ubx.poo.view.image.ImageResource.KEY;
-import static fr.ubx.poo.view.image.ImageResource.PRINCESS;
-
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.WorldEntity;
@@ -21,7 +11,6 @@ import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.decor.*;
 import fr.ubx.poo.model.decor.bomb.*;
 import fr.ubx.poo.model.go.GameObject;
-import fr.ubx.poo.view.sprite.SpriteDecor;
 import fr.ubx.poo.game.Game;
 
 public class Player extends GameObject implements Movable {
