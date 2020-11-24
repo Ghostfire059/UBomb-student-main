@@ -6,6 +6,7 @@ package fr.ubx.poo.model.go.character;
 
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
+import fr.ubx.poo.game.World;
 import fr.ubx.poo.game.WorldEntity;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.decor.*;
@@ -60,14 +61,30 @@ public class Player extends GameObject implements Movable {
     @Override
     public boolean canMove(Direction direction) {
     	Position nextPos = direction.nextPosition(getPosition());
-    	WorldEntity object = game.getWorld().getEntity(nextPos);
-    	return nextPos.inside(game.getWorld().dimension) && object.isCrossable();
+    	Decor object = game.getWorld().get(nextPos);
+    	
+    	if(object instanceof Box) {
+    		Position furtherPos = direction.nextPosition(nextPos);
+    		Decor furtherObject = game.getWorld().get(furtherPos);
+    		return furtherPos.inside(game.getWorld().dimension) && !(furtherObject instanceof Tree || furtherObject instanceof Stone || furtherObject instanceof Box);
+    	}
+    	return nextPos.inside(game.getWorld().dimension) && !(object instanceof Tree || object instanceof Stone) ;
     }
 
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         setPosition(nextPos);
     	Decor decor = game.getWorld().get(nextPos);
+    	
+    	if(decor instanceof Box) {
+    		World w = game.getWorld();
+    		Position furtherPos = direction.nextPosition(nextPos);
+    		w.clear(nextPos);
+    		//w.clear(furtherPos);
+    		w.set(furtherPos, new Box());
+    		w.changed();
+    	}
+    	
     	if(decor instanceof Princess) {
     		this.winner = true;
     	}/*

@@ -14,6 +14,7 @@ public class World {
     private final Map<Position, Decor> grid;
     private final WorldEntity[][] raw;
     public final Dimension dimension;
+    private boolean changed = true;
 
     public World(WorldEntity[][] raw) {
         this.raw = raw;
@@ -62,5 +63,13 @@ public class World {
 
     public boolean isEmpty(Position position) {
         return grid.get(position) == null;
+    }
+    
+    public boolean hasChanged() {
+    	return this.changed;
+    }
+    
+    public void changed() {
+    	this.changed = !this.changed;
     }
 }

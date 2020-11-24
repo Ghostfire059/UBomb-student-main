@@ -130,6 +130,13 @@ public final class GameEngine {
 
 
     private void update(long now) {
+    	if(game.getWorld().hasChanged()) {
+    		sprites.forEach(Sprite::remove);
+    		sprites.clear();
+    		initialize(stage, game);
+    		game.getWorld().changed();
+    	}
+    	
         player.update(now);
 
         if (player.isAlive() == false) {
