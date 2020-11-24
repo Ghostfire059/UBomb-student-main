@@ -93,24 +93,19 @@ public class Player extends GameObject implements Movable {
         }
         if(decor instanceof Key){
         	this.keys = this.keys + 1;
-			System.out.println("key+1");
         }
         if(decor instanceof BombNbInc){
         	this.bombs = this.bombs + 1;
-			System.out.println("bomb+1");
         }
         if(decor instanceof BombNbDec){
         	this.bombs = this.bombs - 1;
-			System.out.println("bomb-1");
         }
         if(decor instanceof BombRngInc){
         	this.scope = this.scope + 1;
-			System.out.println("scope+1");
         }
         if(decor instanceof BombRngDec){
         	if( this.scope > 1 ) {
 				this.scope = this.scope - 1;
-				System.out.println("scope-1");
 			}
         }
     }
