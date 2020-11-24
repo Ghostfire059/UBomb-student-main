@@ -66,7 +66,7 @@ public class Player extends GameObject implements Movable {
     	if(object instanceof Box) {
     		Position furtherPos = direction.nextPosition(nextPos);
     		Decor furtherObject = game.getWorld().get(furtherPos);
-    		return furtherPos.inside(game.getWorld().dimension) && !(furtherObject instanceof Tree || furtherObject instanceof Stone || furtherObject instanceof Box);
+    		return furtherPos.inside(game.getWorld().dimension) && !(furtherObject instanceof Decor);
     	}
     	return nextPos.inside(game.getWorld().dimension) && !(object instanceof Tree || object instanceof Stone) ;
     }
