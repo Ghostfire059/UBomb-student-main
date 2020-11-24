@@ -8,6 +8,7 @@ import static fr.ubx.poo.view.image.ImageResource.*;
 
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.decor.*;
+import fr.ubx.poo.model.decor.door.*;
 import fr.ubx.poo.model.go.character.Player;
 import fr.ubx.poo.view.image.ImageFactory;
 import javafx.scene.layout.Pane;
@@ -29,6 +30,12 @@ public final class SpriteFactory {
         	return new SpriteDecor(layer, factory.get(HEART), position);
         if(decor instanceof Key)
         	return new SpriteDecor(layer, factory.get(KEY), position);
+        if(decor instanceof DoorDown)
+        	return new SpriteDecor(layer, factory.get(DOOROPENED), position);
+        if(decor instanceof DoorUpClosed)
+        	return new SpriteDecor(layer, factory.get(DOORCLOSED), position);
+        if(decor instanceof DoorUpOpened)
+        	return new SpriteDecor(layer, factory.get(DOOROPENED), position);
         return null;
     }
 

@@ -1,6 +1,9 @@
 package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.decor.*;
+import fr.ubx.poo.model.decor.door.DoorDown;
+import fr.ubx.poo.model.decor.door.DoorUpClosed;
+import fr.ubx.poo.model.decor.door.DoorUpOpened;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -38,6 +41,12 @@ public class WorldBuilder {
             	return new Heart();
             case Key:
             	return new Key();
+            case DoorPrevOpened:
+            	return new DoorDown();
+            case DoorNextClosed:
+            	return new DoorUpClosed();
+            case DoorNextOpened:
+            	return new DoorUpOpened();
             default:
                 return null;
         }
