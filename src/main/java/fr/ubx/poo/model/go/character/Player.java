@@ -34,6 +34,11 @@ public class Player extends GameObject implements Movable {
     public int getLives() {
         return lives;
     }
+    public void loseLife() {
+    	if(this.lives>0) {
+    		this.lives-=1;
+    	}
+    }
     
     public int getKeys() {
         return keys;
@@ -80,20 +85,21 @@ public class Player extends GameObject implements Movable {
     		World w = game.getWorld();
     		Position furtherPos = direction.nextPosition(nextPos);
     		w.clear(nextPos);
-    		//w.clear(furtherPos);
     		w.set(furtherPos, new Box());
     		w.changed();
     	}
     	
-    	if(decor instanceof Princess) {
-    		this.winner = true;
-    	}/*
-    	if(decor instanceof Monster) {
-    		this.lives = this.lives - 1;
-    		if( this.lives == 0) {
+    	if(this.game.getWorld().getEntity(nextPos)==WorldEntity.Monster) {
+    		this.loseLife();
+    		if(this.lives==0) {
     			this.alive = false;
     		}
-    	}*/
+    		System.out.println(this.lives);
+    	}
+    	
+    	if(decor instanceof Princess) {
+    		this.winner = true;
+    	}
         if(decor instanceof Heart) {
         	this.lives = this.lives + 1;
         }

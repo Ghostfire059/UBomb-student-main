@@ -31,6 +31,10 @@ public enum ImageResource {
 	BOMBNBDEC("bonus_bomb_nb_dec.png"),
 	BOMBRNGINC("bonus_bomb_range_inc.png"),
 	BOMBRNGDEC("bonus_bomb_range_dec.png"),
+	MONSTER_DOWN("monster_down.png"),
+	MONSTER_LEFT("monster_left.png"),
+	MONSTER_RIGHT("monster_right.png"),
+	MONSTER_UP("monster_up.png"),
     ;
 
     private final String FileName;
