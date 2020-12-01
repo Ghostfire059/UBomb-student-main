@@ -150,7 +150,7 @@ public class Player extends GameObject implements Movable {
     	if( this.invincible && this.timer == 0 && this.alive) {
     		this.timer = now;
     	}
-    	if( this.invincible && now-this.timer >= 1000000000) {
+    	if( this.invincible && now-this.timer >= 2000000000) {
     		this.invincible = false;
     		this.timer = 0;
     	}
@@ -168,6 +168,10 @@ public class Player extends GameObject implements Movable {
 
     public boolean isAlive() {
         return alive;
+    }
+    
+    public boolean isInvincible() {
+        return invincible;
     }
 
 }
