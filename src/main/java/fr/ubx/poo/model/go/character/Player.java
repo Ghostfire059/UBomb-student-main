@@ -24,6 +24,8 @@ public class Player extends GameObject implements Movable {
     private int bombs = 3;
     private int scope = 1;
     private boolean winner;
+    private boolean invincible = false;
+    private long timer = 0;
 
     public Player(Game game, Position position) {
         super(game, position);
@@ -35,8 +37,9 @@ public class Player extends GameObject implements Movable {
         return lives;
     }
     public void loseLife() {
-    	if(this.lives>0) {
-    		this.lives-=1;
+    	if(this.lives > 0 && !invincible) {
+    		this.lives -= 1;
+    		this.invincible = true;
     	}
     }
     
@@ -46,6 +49,14 @@ public class Player extends GameObject implements Movable {
     
     public int getBombs() {
         return bombs;
+    }
+    
+    public void loseBombs() {
+    	this.bombs = this.bombs - 1;
+    }
+    
+    public void addBombs() {
+    	this.bombs = this.bombs + 1;
     }
     
     public int getScope() {
@@ -79,10 +90,10 @@ public class Player extends GameObject implements Movable {
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         setPosition(nextPos);
-    	Decor decor = game.getWorld().get(nextPos);
+		World w = game.getWorld();
+    	Decor decor = w.get(nextPos);
     	
     	if(decor instanceof Box) {
-    		World w = game.getWorld();
     		Position furtherPos = direction.nextPosition(nextPos);
     		w.clear(nextPos);
     		w.set(furtherPos, new Box());
@@ -100,22 +111,34 @@ public class Player extends GameObject implements Movable {
     	}
         if(decor instanceof Heart) {
         	this.lives = this.lives + 1;
+        	w.clear(nextPos);
+    		w.changed();
         }
         if(decor instanceof Key){
         	this.keys = this.keys + 1;
+        	w.clear(nextPos);
+    		w.changed();
         }
         if(decor instanceof BombNbInc){
-        	this.bombs = this.bombs + 1;
+        	this.addBombs();
+        	w.clear(nextPos);
+    		w.changed();
         }
         if(decor instanceof BombNbDec){
-        	this.bombs = this.bombs - 1;
+        	this.loseBombs();
+        	w.clear(nextPos);
+    		w.changed();
         }
         if(decor instanceof BombRngInc){
         	this.scope = this.scope + 1;
+        	w.clear(nextPos);
+    		w.changed();
         }
         if(decor instanceof BombRngDec){
         	if( this.scope > 1 ) {
 				this.scope = this.scope - 1;
+				w.clear(nextPos);
+	    		w.changed();
 			}
         }
     }
@@ -123,6 +146,13 @@ public class Player extends GameObject implements Movable {
     public void update(long now) {
     	if(this.lives<=0) {
     		this.alive = false;
+    	}
+    	if( this.invincible && this.timer == 0 && this.alive) {
+    		this.timer = now;
+    	}
+    	if( this.invincible && now-this.timer >= 2000000000) {
+    		this.invincible = false;
+    		this.timer = 0;
     	}
         if (moveRequested) {
             if (canMove(direction)) {
@@ -138,6 +168,10 @@ public class Player extends GameObject implements Movable {
 
     public boolean isAlive() {
         return alive;
+    }
+    
+    public boolean isInvincible() {
+        return invincible;
     }
 
 }
