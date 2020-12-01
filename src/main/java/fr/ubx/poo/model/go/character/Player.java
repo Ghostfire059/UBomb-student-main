@@ -79,10 +79,10 @@ public class Player extends GameObject implements Movable {
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         setPosition(nextPos);
-    	Decor decor = game.getWorld().get(nextPos);
+		World w = game.getWorld();
+    	Decor decor = w.get(nextPos);
     	
     	if(decor instanceof Box) {
-    		World w = game.getWorld();
     		Position furtherPos = direction.nextPosition(nextPos);
     		w.clear(nextPos);
     		w.set(furtherPos, new Box());
@@ -100,22 +100,34 @@ public class Player extends GameObject implements Movable {
     	}
         if(decor instanceof Heart) {
         	this.lives = this.lives + 1;
+        	w.clear(nextPos);
+    		w.changed();
         }
         if(decor instanceof Key){
         	this.keys = this.keys + 1;
+        	w.clear(nextPos);
+    		w.changed();
         }
         if(decor instanceof BombNbInc){
         	this.bombs = this.bombs + 1;
+        	w.clear(nextPos);
+    		w.changed();
         }
         if(decor instanceof BombNbDec){
         	this.bombs = this.bombs - 1;
+        	w.clear(nextPos);
+    		w.changed();
         }
         if(decor instanceof BombRngInc){
         	this.scope = this.scope + 1;
+        	w.clear(nextPos);
+    		w.changed();
         }
         if(decor instanceof BombRngDec){
         	if( this.scope > 1 ) {
 				this.scope = this.scope - 1;
+				w.clear(nextPos);
+	    		w.changed();
 			}
         }
     }
