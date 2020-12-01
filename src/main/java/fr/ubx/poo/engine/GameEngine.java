@@ -145,6 +145,10 @@ public final class GameEngine {
     		game.getWorld().changed();
     	}
     	
+    	for(Monster m : this.monsters) {
+    		m.update(now);
+    	}
+    	
         player.update(now);
 
         if (player.isAlive() == false) {

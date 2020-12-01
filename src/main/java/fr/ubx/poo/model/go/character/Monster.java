@@ -12,6 +12,7 @@ public class Monster extends GameObject implements Movable{
 	private boolean alive = true;
 	Direction direction;
 	private boolean moveRequested = false;
+	private long prev_move = 0;
 
 	public Monster(Game game, Position position) {
 		super(game, position);
@@ -45,7 +46,7 @@ public class Monster extends GameObject implements Movable{
 		Position nextPos = direction.nextPosition(getPosition());
 		Decor object = game.getWorld().get(nextPos);
 		
-		return !(object instanceof Tree || object instanceof Stone || object instanceof Box);
+		return nextPos.inside(game.getWorld().dimension) && !(object instanceof Tree || object instanceof Stone || object instanceof Box);
 	}
 
 	@Override
@@ -58,12 +59,17 @@ public class Monster extends GameObject implements Movable{
 	}
 	
 	public void update(long now) {
-		if(this.moveRequested) {
-			if(this.canMove(this.direction)) {
-				this.doMove(this.direction);
+		if(now-this.prev_move>1500000000) {
+			Direction d = Direction.random();
+			requestMove(d);
+			if(this.moveRequested) {
+				if(this.canMove(this.direction)) {
+					this.doMove(this.direction);
+				}
 			}
+			moveRequested = false;
+			this.prev_move = now;
 		}
-		moveRequested = false;
 	}
 
 }

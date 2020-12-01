@@ -89,12 +89,10 @@ public class Player extends GameObject implements Movable {
     		w.changed();
     	}
     	
-    	if(this.game.getWorld().getEntity(nextPos)==WorldEntity.Monster) {
-    		this.loseLife();
-    		if(this.lives==0) {
-    			this.alive = false;
+    	for(Monster m : game.getMonsters()) {
+    		if(this.getPosition().equals(m.getPosition())) {
+    			this.loseLife();
     		}
-    		System.out.println(this.lives);
     	}
     	
     	if(decor instanceof Princess) {
@@ -123,6 +121,9 @@ public class Player extends GameObject implements Movable {
     }
 
     public void update(long now) {
+    	if(this.lives<=0) {
+    		this.alive = false;
+    	}
         if (moveRequested) {
             if (canMove(direction)) {
                 doMove(direction);
