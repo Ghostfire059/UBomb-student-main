@@ -8,6 +8,7 @@ import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
+import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -39,6 +40,7 @@ public final class GameEngine {
     private Stage stage;
     private Sprite spritePlayer;
     private Sprite spriteMonsters[];
+    private Sprite spriteBomb[];
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
@@ -71,13 +73,14 @@ public final class GameEngine {
         statusBar = new StatusBar(root, sceneWidth, sceneHeight, game);
         // Create decor sprites
         game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+        //Create go sprites
         spritePlayer = SpriteFactory.createPlayer(layer, player);
         int nbMonsters = monsters.length;
         this.spriteMonsters = new Sprite[nbMonsters];
         for(int i=0; i<nbMonsters; i++) {
         	this.spriteMonsters[i] = SpriteFactory.createMonster(layer, monsters[i]);
         }
-
+        this.spriteBomb = new Sprite[player.getBombs()];
     }
 
     protected final void buildAndSetGameLoop() {
@@ -114,6 +117,20 @@ public final class GameEngine {
         if (input.isMoveUp()) {
             player.requestMove(Direction.N);
         }
+        if (input.isBomb()){
+        	player.requestBomb();
+        	if(player.bombRequested()) {
+        		player.setBomb(now);
+            	Bomb[] bombs = player.getTabBombs();
+                for(int i=0; i<this.spriteBomb.length; i++) {
+                	Bomb bomb = bombs[i];
+                	if(bomb!=null) {
+                    	this.spriteBomb[i] = SpriteFactory.createBomb(layer, bomb);
+                	}
+                }
+        	}
+        }
+        
         input.clear();
     }
 
@@ -148,9 +165,23 @@ public final class GameEngine {
     	for(Monster m : this.monsters) {
     		m.update(now);
     	}
-    	
-        player.update(now);
+        
+    	Bomb[] tabBombs = this.player.getTabBombs();
+    	for(int i=0; i<tabBombs.length; i++) {
+    		Bomb b = tabBombs[i];
+    		if(b!=null) {
+    			b.update(now);
+    			if(b.getState()==0) {
+    				this.spriteBomb[i].remove();
+    				this.spriteBomb[i]=null;
+    				b=null;
+    				tabBombs[i]=null;
+    			}
+    		}
+    	}
 
+    	player.update(now);
+    	
         if (player.isAlive() == false) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
@@ -165,6 +196,12 @@ public final class GameEngine {
         sprites.forEach(Sprite::render);
         for(Sprite m : this.spriteMonsters) {
         	m.render();
+        }
+        
+        for(Sprite b : this.spriteBomb) {
+        	if(b!=null) {
+        		b.render();
+        	}
         }
         // last rendering to have player in the foreground
         spritePlayer.render();

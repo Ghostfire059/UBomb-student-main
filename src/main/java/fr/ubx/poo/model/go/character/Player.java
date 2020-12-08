@@ -7,10 +7,10 @@ package fr.ubx.poo.model.go.character;
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.World;
-import fr.ubx.poo.game.WorldEntity;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.decor.*;
 import fr.ubx.poo.model.decor.bomb.*;
+import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
 
@@ -26,6 +26,9 @@ public class Player extends GameObject implements Movable {
     private boolean winner;
     private boolean invincible = false;
     private long timer = 0;
+    private boolean bombRequested = false;
+    private Bomb oldTabBombs[] = new Bomb[bombs];
+    private Bomb newTabBombs[];
 
     public Player(Game game, Position position) {
         super(game, position);
@@ -51,6 +54,10 @@ public class Player extends GameObject implements Movable {
         return bombs;
     }
     
+    public Bomb[] getTabBombs() {
+    	return this.oldTabBombs;
+    }
+    
     public void loseBombs() {
     	this.bombs = this.bombs - 1;
     }
@@ -65,6 +72,31 @@ public class Player extends GameObject implements Movable {
 
     public Direction getDirection() {
         return direction;
+    }
+    
+    public boolean bombRequested() {
+    	return this.bombRequested;
+    }
+    
+    public void requestBomb() {
+    	Position nextPos = this.direction.nextPosition(getPosition());
+    	Decor object = game.getWorld().get(nextPos);
+    	if(object==null && nextPos.inside(this.game.getWorld().dimension) && this.bombs!=0) {
+    		bombRequested = true;
+    	}
+    }
+    
+    public void setBomb(long now) {
+    	Position nextPos = this.direction.nextPosition(getPosition());
+    	Decor object = game.getWorld().get(nextPos);
+    	if(object==null && nextPos.inside(this.game.getWorld().dimension)) {
+    		int tmp=0;
+    		while(this.oldTabBombs[tmp]!=null && tmp<this.oldTabBombs.length) {
+    			tmp++;
+    		}
+    		this.oldTabBombs[tmp]=new Bomb(this.game, nextPos, now);
+    	}
+    	this.loseBombs();
     }
 
     public void requestMove(Direction direction) {

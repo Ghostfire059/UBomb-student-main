@@ -18,51 +18,66 @@ import fr.ubx.poo.model.decor.bomb.BombRngInc;
 import fr.ubx.poo.game.Direction;
 
 public class Bomb extends GameObject{
+	private static final long SEC = 1000000000;
 	private long creation_time;
 	private int scope;
+	private int state = 4;
 	
 	public Bomb(Game game, Position position, long now) {
 		super(game, position);
 		this.creation_time = now;
 		this.scope = game.getPlayer().getScope();
-		//game.getPlayer().loseBomb();
 	}
 	
 	public long getCreationTime() {
 		return this.getCreationTime();
 	}
 	
+	public int getState() {
+		return this.state;
+	}
+	
 	public void explode() {
 		World w = this.game.getWorld();
-		Position[] explosionTab = new Position[this.scope];
 		Direction[] dirTab = {Direction.N, Direction.E, Direction.S, Direction.W};
+		Position[] explosionTab = new Position[this.scope*dirTab.length];
 		Position pos = this.getPosition();
 		
 		for(Direction d : dirTab) {
 			Position nextPos = d.nextPosition(pos);
 			for(int i=0; i<this.scope; i++) {
 				Decor object = w.get(nextPos);
-				if(object instanceof Stone || object instanceof Tree) {
-					break;
-				}
-				if(object instanceof DoorDown || object instanceof DoorUpClosed || object instanceof DoorUpOpened) {
-					break;
-				}
-				else {
-					w.clear(nextPos);
-					//w.set(nextPos, new Explosion());
-					w.changed();
-				}
-				if(object instanceof Box || object instanceof BombNbDec || object instanceof BombNbInc || object instanceof BombRngDec || object instanceof BombRngInc || object instanceof Heart) {
-					break;
+				if(object==null) {
+					//rempli explosionTab
+					int tmp = 0;
+					while(tmp<explosionTab.length && explosionTab[tmp]!=null) {
+						tmp++;
+					}
+					explosionTab[tmp] = new Position(nextPos);
+					nextPos = d.nextPosition(nextPos);
 				}
 			}
 		}
-		//game.getPlayer().winBomb();
+		//use explosionTab
+		game.getPlayer().addBombs();
+		System.out.println("KABOOM");
 	}
 	
 	public void update(long now) {
-		
+		long delta = (now/SEC)-(this.creation_time/SEC);
+		if(delta>=1 && delta<2) {
+			this.state = 3;
+		}
+		if (delta>=2 && delta<3) {
+			this.state = 2;
+		}
+		if (delta>=3 && delta<4) {
+			this.state = 1;
+		}
+		if(delta>=4) {
+			this.state = 0;
+			this.explode();
+		}
 	}
 	
 }
