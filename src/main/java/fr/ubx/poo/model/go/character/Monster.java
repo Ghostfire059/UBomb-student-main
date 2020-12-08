@@ -46,7 +46,7 @@ public class Monster extends GameObject implements Movable{
 		Position nextPos = direction.nextPosition(getPosition());
 		Decor object = game.getWorld().get(nextPos);
 		
-		return nextPos.inside(game.getWorld().dimension) && !(object instanceof Tree || object instanceof Stone || object instanceof Box);
+		return nextPos.inside(game.getWorld().dimension) && (object == null || object.isCrossable());
 	}
 
 	@Override
