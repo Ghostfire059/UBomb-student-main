@@ -7,8 +7,10 @@ package fr.ubx.poo.model.go.character;
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.World;
+import fr.ubx.poo.model.Entity;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.decor.*;
+import fr.ubx.poo.model.decor.door.Door;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
 
@@ -38,14 +40,14 @@ public class Player extends GameObject implements Movable {
     public int getLives() {
         return lives;
     }
+    public void addLife() {
+    	this.lives = this.lives + 1;
+    }
     public void loseLife() {
     	if(this.lives > 0 && !invincible) {
     		this.lives -= 1;
     		this.invincible = true;
     	}
-    }
-    public void addLife() {
-    	this.lives = this.lives + 1;
     }
     
     public int getKeys() {
@@ -63,21 +65,21 @@ public class Player extends GameObject implements Movable {
     public int getBombs() {
         return bombs;
     }
-    public void loseBombs() {
-    	this.bombs = this.bombs - 1;
-    }
     public void addBombs() {
     	this.bombs = this.bombs + 1;
+    }
+    public void loseBombs() {
+    	this.bombs = this.bombs - 1;
     }
     
     public int getScope() {
     	return scope;
     }
-    public void loseScope() {
-		this.scope = this.scope - 1;
-    }
     public void addScope() {
     	this.scope = this.scope + 1;
+    }
+    public void loseScope() {
+		this.scope = this.scope - 1;
     }
 
     public Direction getDirection() {
@@ -103,7 +105,7 @@ public class Player extends GameObject implements Movable {
     	if(object instanceof Box) {
     		Position furtherPos = direction.nextPosition(nextPos);
     		Decor furtherObject = game.getWorld().get(furtherPos);
-    		return furtherPos.inside(game.getWorld().dimension) && !(furtherObject instanceof Decor);
+    		return furtherPos.inside(game.getWorld().dimension) && furtherObject == null && game.getWorld().getEntity(furtherPos).isCrossable();
     	}
     	return nextPos.inside(game.getWorld().dimension) && (object == null || object.isCrossable()) ;
     }
