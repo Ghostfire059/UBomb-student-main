@@ -12,6 +12,7 @@ import fr.ubx.poo.model.decor.Tree;
 import fr.ubx.poo.model.decor.door.DoorDown;
 import fr.ubx.poo.model.decor.door.DoorUpClosed;
 import fr.ubx.poo.model.decor.door.DoorUpOpened;
+import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.decor.bomb.BombNbDec;
 import fr.ubx.poo.model.decor.bomb.BombNbInc;
 import fr.ubx.poo.model.decor.bomb.BombRngDec;
@@ -61,10 +62,19 @@ public class Bomb extends GameObject{
 		}
 		//use explosionTab
 		//retirer sprites explosion après les avoir afficher
+		Monster[] mTab = game.getMonsters();
 		for(Position p:explosionTab) {
 			if(p!=null) {
 				w.clear(p);
 				w.set(p, new Explosion());
+				if(p.equals(game.getPlayer().getPosition())) {
+					game.getPlayer().loseLife();
+				}
+				for(Monster m:mTab) {
+					if(p.equals(m.getPosition())) {
+						m.die();
+					}
+				}
 			}
 		}
 		game.getPlayer().addBombs();

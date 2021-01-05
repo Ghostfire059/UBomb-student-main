@@ -79,7 +79,9 @@ public final class GameEngine {
         int nbMonsters = monsters.length;
         this.spriteMonsters = new Sprite[nbMonsters];
         for(int i=0; i<nbMonsters; i++) {
-        	this.spriteMonsters[i] = SpriteFactory.createMonster(layer, monsters[i]);
+        	if(monsters[i]!=null) {
+        		this.spriteMonsters[i] = SpriteFactory.createMonster(layer, monsters[i]);        		
+        	}
         }
         this.spriteBomb = new Sprite[player.getBombs()];
     }
@@ -163,9 +165,22 @@ public final class GameEngine {
     		game.getWorld().changed();
     	}
     	
-    	for(Monster m : this.monsters) {
-    		m.update(now);
+    	for(int i=0; i<this.monsters.length; i++) {
+    		if(this.monsters[i]!=null) {
+    			this.monsters[i].update(now);
+        		if(!this.monsters[i].alive()) {
+        			this.spriteMonsters[i].remove();
+        			this.spriteMonsters[i]=null;
+        			this.monsters[i]=null;
+        		}
+    		}
     	}
+    	/*for(Monster m : this.monsters) {
+    		m.update(now);
+    		if(!m.alive()) {
+    			m=null;
+    		}
+    	}*/
         
     	Bomb[] tabBombs = this.player.getTabBombs();
     	for(int i=0; i<tabBombs.length; i++) {
@@ -198,7 +213,9 @@ public final class GameEngine {
     private void render() {
         sprites.forEach(Sprite::render);
         for(Sprite m : this.spriteMonsters) {
-        	m.render();
+        	if(m!=null) {        		
+        		m.render();
+        	}
         }
         
         for(Sprite b : this.spriteBomb) {
