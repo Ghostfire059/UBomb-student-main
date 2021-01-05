@@ -5,6 +5,7 @@ import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.World;
 import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.decor.Explosion;
 import fr.ubx.poo.model.decor.Heart;
 import fr.ubx.poo.model.decor.Stone;
 import fr.ubx.poo.model.decor.Tree;
@@ -47,7 +48,7 @@ public class Bomb extends GameObject{
 			Position nextPos = d.nextPosition(pos);
 			for(int i=0; i<this.scope; i++) {
 				Decor object = w.get(nextPos);
-				if(object==null) {
+				if(object==null || object instanceof Box || object instanceof Heart || object instanceof BombNbInc || object instanceof BombNbDec || object instanceof BombRngInc || object instanceof BombRngDec) {
 					//rempli explosionTab
 					int tmp = 0;
 					while(tmp<explosionTab.length && explosionTab[tmp]!=null) {
@@ -59,8 +60,16 @@ public class Bomb extends GameObject{
 			}
 		}
 		//use explosionTab
+		//retirer sprites explosion après les avoir afficher
+		for(Position p:explosionTab) {
+			if(p!=null) {
+				w.clear(p);
+				w.set(p, new Explosion());
+			}
+		}
 		game.getPlayer().addBombs();
 		System.out.println("KABOOM");
+		w.changed();
 	}
 	
 	public void update(long now) {
