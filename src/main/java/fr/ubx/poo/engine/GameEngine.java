@@ -8,6 +8,9 @@ import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
+import fr.ubx.poo.game.Position;
+import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.decor.door.DoorUpClosed;
 import fr.ubx.poo.model.go.character.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -113,6 +116,17 @@ public final class GameEngine {
         }
         if (input.isMoveUp()) {
             player.requestMove(Direction.N);
+        }
+        if (input.isKey()) {
+        	//regarder dans la direction du player si c'est une porte
+        	//ouvrir la porte = changer le sprite
+        	//supprimer une clé
+        	Position nextPos = player.getDirection().nextPosition(player.getPosition());
+        	Decor object = game.getWorld().get(nextPos);
+        	if (object instanceof DoorUpClosed) {
+        		object.crossIt(player);
+        		object = new DoorUpOpenned(); //Je sais pas comment faire
+        	}
         }
         input.clear();
     }

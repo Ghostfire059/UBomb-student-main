@@ -15,21 +15,21 @@ import fr.ubx.poo.model.go.character.*;
 
 public class Game {
 
-    private final World world;
+    private final World world;      //World[] tabWorld;
     private final Player player;
     private Monster[] monsters;
     private final String worldPath;
     public int initPlayerLives;
 
     public Game(String worldPath) {
-        world = new WorldStatic();
+        world = new WorldStatic();    //initialiser les différents niveaux
         this.worldPath = worldPath;
         loadConfig(worldPath);
         Position positionPlayer = null;
         Position[] positionsMonsters = null;
         try {
-            positionPlayer = world.findPlayer();
-            player = new Player(this, positionPlayer);
+            positionPlayer = world.findPlayer();    //niveau 0 findPlayer, niveau sup position de DoorDown
+            player = new Player(this, positionPlayer);    //niveau inf position de DoorUpOpened
             positionsMonsters = world.findMonsters();
             int nbMonsters = positionsMonsters.length;
         	monsters = new Monster[nbMonsters];
