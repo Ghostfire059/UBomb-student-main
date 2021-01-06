@@ -8,6 +8,11 @@ public class DoorUpClosed extends DoorUp{
 	public boolean isCrossable() {
 		return false;
 	}
+	
+	@Override
+	public boolean isExplodable() {
+		return false;
+	}
 
 	@Override
 	public void crossIt(Player player) {}

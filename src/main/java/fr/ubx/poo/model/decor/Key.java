@@ -16,6 +16,11 @@ public class Key extends Decor{
 	}
 	
 	@Override
+	public boolean isExplodable() {
+		return false;
+	}
+	
+	@Override
 	public void crossIt(Player player) {
 		World w = player.getGame().getWorld();
 		player.addKeys();

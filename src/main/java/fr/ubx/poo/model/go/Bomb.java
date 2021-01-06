@@ -52,7 +52,7 @@ public class Bomb extends GameObject{
 			Position nextPos = d.nextPosition(pos);
 			for(int i=0; i<this.scope; i++) {
 				Decor object = w.get(nextPos);
-				if(object==null || object instanceof Box || object instanceof Heart || object instanceof BombNbInc || object instanceof BombNbDec || object instanceof BombRngInc || object instanceof BombRngDec) {
+				if(object==null || object.isExplodable()) {
 					//rempli explosionTab
 					int tmp = 0;
 					while(tmp<explosionTab.length && explosionTab[tmp]!=null) {

@@ -7,6 +7,12 @@ public class DoorDown extends Door{
 	public boolean isCrossable() {
 		return true;
 	}
+	
+	@Override
+	public boolean isExplodable() {
+		return false;
+	}
+	
 	@Override
 	public boolean isTaken() {
 		return false;

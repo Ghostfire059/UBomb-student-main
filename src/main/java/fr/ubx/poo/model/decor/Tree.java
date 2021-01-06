@@ -16,6 +16,11 @@ public class Tree extends Decor {
 		return false;
 	}
 	
+	@Override
+	public boolean isExplodable() {
+		return false;
+	}
+	
     @Override
     public String toString() {
         return "Tree";

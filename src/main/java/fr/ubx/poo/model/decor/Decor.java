@@ -24,6 +24,10 @@ public class Decor extends Entity {
 		return false;
 	}
 	
+	public boolean isExplodable() {
+		return true;
+	}
+	
 	public void crossIt(Player player) {}
 	
 }
