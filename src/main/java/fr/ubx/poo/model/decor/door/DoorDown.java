@@ -1,5 +1,6 @@
 package fr.ubx.poo.model.decor.door;
 
+import fr.ubx.poo.model.go.character.Player;
 
 public class DoorDown extends Door{
 	
@@ -7,9 +8,10 @@ public class DoorDown extends Door{
 	public boolean isCrossable() {
 		return true;
 	}
+	
 	@Override
-	public boolean isTaken() {
-		return false;
+	public void crossIt(Player player) {
+		//player.game -> niveau inf
 	}
 	
 }

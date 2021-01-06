@@ -12,10 +12,6 @@ import fr.ubx.poo.model.go.character.Player;
  */
 public class Decor extends Entity {
 	
-	public boolean isDecor() {
-		return true;
-	}
-	
 	public boolean isCrossable() {
 		return false;
 	}

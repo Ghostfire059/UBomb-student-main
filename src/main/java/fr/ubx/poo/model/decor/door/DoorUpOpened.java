@@ -10,5 +10,7 @@ public class DoorUpOpened extends DoorUp{
 	}
 
 	@Override
-	public void crossIt(Player player) {}
+	public void crossIt(Player player) {
+		//player.game -> niveau sup
+	}
 }
