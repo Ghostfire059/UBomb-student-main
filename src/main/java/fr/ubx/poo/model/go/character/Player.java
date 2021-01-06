@@ -9,7 +9,6 @@ import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.World;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.decor.*;
-import fr.ubx.poo.model.decor.bomb.*;
 import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
@@ -23,21 +22,27 @@ public class Player extends GameObject implements Movable {
     private int keys = 0;
     private int bombs = 3;
     private int scope = 1;
-    private boolean winner;
+    private boolean winner = false;
     private boolean invincible = false;
     private long timer = 0;
     private boolean bombRequested = false;
     private Bomb oldTabBombs[] = new Bomb[bombs];
-    private Bomb newTabBombs[];
 
     public Player(Game game, Position position) {
         super(game, position);
         this.direction = Direction.S;
         this.lives = game.getInitPlayerLives();
     }
-
+    
+    public Game getGame() {
+        return super.game;
+    }
+    
     public int getLives() {
         return lives;
+    }
+    public void addLife() {
+    	this.lives = this.lives + 1;
     }
     public void loseLife() {
     	if(this.lives > 0 && !invincible) {
@@ -49,6 +54,14 @@ public class Player extends GameObject implements Movable {
     public int getKeys() {
         return keys;
     }
+    public void addKeys() {
+    	this.keys = this.keys + 1;
+    }
+    public void loseKeys() {
+    	if(this.keys > 0 ) {
+    		this.keys -= 1;
+    	}
+    }
     
     public int getBombs() {
         return bombs;
@@ -58,16 +71,21 @@ public class Player extends GameObject implements Movable {
     	return this.oldTabBombs;
     }
     
+    public void addBombs() {
+    	this.bombs = this.bombs + 1;
+    }
     public void loseBombs() {
     	this.bombs = this.bombs - 1;
     }
     
-    public void addBombs() {
-    	this.bombs = this.bombs + 1;
-    }
-    
     public int getScope() {
     	return scope;
+    }
+    public void addScope() {
+    	this.scope = this.scope + 1;
+    }
+    public void loseScope() {
+		this.scope = this.scope - 1;
     }
 
     public Direction getDirection() {
@@ -99,6 +117,10 @@ public class Player extends GameObject implements Movable {
     	this.loseBombs();
     }
 
+    public void winner() {
+    	this.winner = true;
+    }
+
     public void requestMove(Direction direction) {
         if (direction != this.direction) {
             this.direction = direction;
@@ -114,9 +136,9 @@ public class Player extends GameObject implements Movable {
     	if(object instanceof Box) {
     		Position furtherPos = direction.nextPosition(nextPos);
     		Decor furtherObject = game.getWorld().get(furtherPos);
-    		return furtherPos.inside(game.getWorld().dimension) && !(furtherObject instanceof Decor);
+    		return furtherPos.inside(game.getWorld().dimension) && (furtherObject == null || game.getWorld().getEntity(furtherPos).isCrossable());
     	}
-    	return nextPos.inside(game.getWorld().dimension) && !(object instanceof Tree || object instanceof Stone) ;
+    	return nextPos.inside(game.getWorld().dimension) && (object == null || object.isCrossable()) ;
     }
 
     public void doMove(Direction direction) {
@@ -124,13 +146,11 @@ public class Player extends GameObject implements Movable {
         setPosition(nextPos);
 		World w = game.getWorld();
     	Decor decor = w.get(nextPos);
-    	
-    	if(decor instanceof Box) {
-    		Position furtherPos = direction.nextPosition(nextPos);
-    		w.clear(nextPos);
-    		w.set(furtherPos, new Box());
-    		w.changed();
-    	}
+		if( decor != null) {
+			if( decor.isTaken() ) {
+	    		decor.crossIt(this);
+	    	}
+		}
     	
     	for(Monster m : game.getMonsters()) {
     		if(m!=null) {    			
@@ -139,42 +159,7 @@ public class Player extends GameObject implements Movable {
     			}
     		}
     	}
-    	
-    	if(decor instanceof Princess) {
-    		this.winner = true;
-    	}
-        if(decor instanceof Heart) {
-        	this.lives = this.lives + 1;
-        	w.clear(nextPos);
-    		w.changed();
-        }
-        if(decor instanceof Key){
-        	this.keys = this.keys + 1;
-        	w.clear(nextPos);
-    		w.changed();
-        }
-        if(decor instanceof BombNbInc){
-        	this.addBombs();
-        	w.clear(nextPos);
-    		w.changed();
-        }
-        if(decor instanceof BombNbDec){
-        	this.loseBombs();
-        	w.clear(nextPos);
-    		w.changed();
-        }
-        if(decor instanceof BombRngInc){
-        	this.scope = this.scope + 1;
-        	w.clear(nextPos);
-    		w.changed();
-        }
-        if(decor instanceof BombRngDec){
-        	if( this.scope > 1 ) {
-				this.scope = this.scope - 1;
-				w.clear(nextPos);
-	    		w.changed();
-			}
-        }
+ 
     }
 
     public void update(long now) {

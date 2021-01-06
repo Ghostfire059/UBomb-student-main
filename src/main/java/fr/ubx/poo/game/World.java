@@ -15,11 +15,19 @@ public class World {
     private final WorldEntity[][] raw;
     public final Dimension dimension;
     private boolean changed = true;
+    public int level = 0;
 
     public World(WorldEntity[][] raw) {
         this.raw = raw;
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
+    }
+    
+    public World(WorldEntity[][] raw, int level) {
+        this.raw = raw;
+        dimension = new Dimension(raw.length, raw[0].length);
+        grid = WorldBuilder.build(raw, dimension);
+        this.level = level;
     }
 
     public Position findPlayer() throws PositionNotFoundException {
