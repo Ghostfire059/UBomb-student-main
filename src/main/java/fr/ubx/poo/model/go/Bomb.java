@@ -47,6 +47,7 @@ public class Bomb extends GameObject{
 		Position[] explosionTab = new Position[this.scope*dirTab.length];
 		Position pos = this.getPosition();
 		
+		//fill explosionTab with the positions that can be exploded
 		for(Direction d : dirTab) {
 			Position nextPos = d.nextPosition(pos);
 			for(int i=0; i<this.scope; i++) {
@@ -62,16 +63,19 @@ public class Bomb extends GameObject{
 				}
 			}
 		}
-		//use explosionTab
-		//retirer sprites explosion après les avoir afficher
+		
 		Monster[] mTab = game.getMonsters();
+		//use explosion tab to:
 		for(Position p:explosionTab) {
 			if(p!=null) {
+				//create explosion's Decor
 				w.clear(p);
 				w.set(p, new Explosion());
+				//inflict damage to the player
 				if(p.equals(game.getPlayer().getPosition())) {
 					game.getPlayer().loseLife();
 				}
+				//kill monster
 				for(Monster m:mTab) {
 					if(p.equals(m.getPosition())) {
 						m.die();
@@ -79,9 +83,9 @@ public class Bomb extends GameObject{
 				}
 			}
 		}
-		System.out.println("KABOOM");
+		//switch world's state to display the new sprites c.f. world.update();
 		w.changed();
-		this.eTab=explosionTab.clone();
+		this.eTab=explosionTab;
 		this.exploded = true;
 	}
 	
@@ -96,24 +100,24 @@ public class Bomb extends GameObject{
 		if (delta>=3 && delta<4) {
 			this.state = 1;
 		}
+		//explode if hasn't yet
 		if(delta>=4 && delta<5) {
 			this.state = 0;
 			if(!this.exploded) {
 				this.explode();				
 			}
 		}
-		//time 1 sec to clear explosion's sprites
+		//clear explosion's sprites
 		if(delta>=5 && delta<6) {
 			this.state = -1;
 			game.getPlayer().addBombs();
 			World w = this.game.getWorld();
 			for(Position p:this.eTab) {
-				System.out.println(p);
 				if(p!=null) {
 					w.clear(p);
 				}
 			}
-			this.game.getWorld().changed();
+			w.changed();
 		}
 	}
 	
