@@ -24,6 +24,8 @@ public class Bomb extends GameObject{
 	private long creation_time;
 	private int scope;
 	private int state = 4;
+	private Position[] eTab;
+	private boolean exploded = false;
 	
 	public Bomb(Game game, Position position, long now) {
 		super(game, position);
@@ -77,9 +79,10 @@ public class Bomb extends GameObject{
 				}
 			}
 		}
-		game.getPlayer().addBombs();
 		System.out.println("KABOOM");
 		w.changed();
+		this.eTab=explosionTab.clone();
+		this.exploded = true;
 	}
 	
 	public void update(long now) {
@@ -93,9 +96,24 @@ public class Bomb extends GameObject{
 		if (delta>=3 && delta<4) {
 			this.state = 1;
 		}
-		if(delta>=4) {
+		if(delta>=4 && delta<5) {
 			this.state = 0;
-			this.explode();
+			if(!this.exploded) {
+				this.explode();				
+			}
+		}
+		//time 1 sec to clear explosion's sprites
+		if(delta>=5 && delta<6) {
+			this.state = -1;
+			game.getPlayer().addBombs();
+			World w = this.game.getWorld();
+			for(Position p:this.eTab) {
+				System.out.println(p);
+				if(p!=null) {
+					w.clear(p);
+				}
+			}
+			this.game.getWorld().changed();
 		}
 	}
 	

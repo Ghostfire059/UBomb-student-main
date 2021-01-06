@@ -8,7 +8,6 @@ import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
-import fr.ubx.poo.game.World;
 import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.*;
 import javafx.animation.AnimationTimer;
@@ -192,8 +191,10 @@ public final class GameEngine {
     					this.spriteBomb[i].remove();
     					this.spriteBomb[i]=null;
     				}    					
+    			}
+    			if(b.getState()==-1) {
     				b=null;
-    				tabBombs[i]=null;
+    				tabBombs[i]=null;    				
     			}
     		}
     	}
