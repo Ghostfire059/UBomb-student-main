@@ -15,6 +15,11 @@ public class Princess extends Decor{
 	}
 	
 	@Override
+	public boolean isExplodable() {
+		return false;
+	}
+	
+	@Override
 	public void crossIt(Player player) {
 		player.winner();
 	}

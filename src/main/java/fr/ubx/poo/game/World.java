@@ -15,12 +15,15 @@ public class World {
     private final WorldEntity[][] raw;
     public final Dimension dimension;
     private boolean changed = true;
-    public int level = 0;
+    public final int level;
+    private boolean actived;
 
     public World(WorldEntity[][] raw) {
         this.raw = raw;
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
+        this.level = 0;
+        this.actived = true;
     }
     
     public World(WorldEntity[][] raw, int level) {
@@ -28,6 +31,7 @@ public class World {
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
         this.level = level;
+        this.actived = false;
     }
 
     public Position findPlayer() throws PositionNotFoundException {
@@ -97,5 +101,13 @@ public class World {
     
     public void changed() {
     	this.changed = !this.changed;
+    }
+    
+    public boolean isActived() {
+    	return this.actived;
+    }
+    
+    public void actived() {
+    	this.actived = !this.actived;
     }
 }

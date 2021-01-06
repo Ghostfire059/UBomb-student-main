@@ -5,6 +5,11 @@
 package fr.ubx.poo.model.decor;
 
 public class Stone extends Decor {
+
+	@Override
+	public boolean isExplodable() {
+		return false;
+	}
 	
     @Override
     public String toString() {

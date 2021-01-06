@@ -11,6 +11,7 @@ import fr.ubx.poo.game.Game;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.decor.door.DoorUpClosed;
+import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -42,6 +43,7 @@ public final class GameEngine {
     private Stage stage;
     private Sprite spritePlayer;
     private Sprite spriteMonsters[];
+    private Sprite spriteBomb[];
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
@@ -74,13 +76,16 @@ public final class GameEngine {
         statusBar = new StatusBar(root, sceneWidth, sceneHeight, game);
         // Create decor sprites
         game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+        //Create go sprites
         spritePlayer = SpriteFactory.createPlayer(layer, player);
         int nbMonsters = monsters.length;
         this.spriteMonsters = new Sprite[nbMonsters];
         for(int i=0; i<nbMonsters; i++) {
-        	this.spriteMonsters[i] = SpriteFactory.createMonster(layer, monsters[i]);
+        	if(monsters[i]!=null) {
+        		this.spriteMonsters[i] = SpriteFactory.createMonster(layer, monsters[i]);        		
+        	}
         }
-
+        this.spriteBomb = new Sprite[player.getBombs()];
     }
 
     protected final void buildAndSetGameLoop() {
@@ -118,14 +123,23 @@ public final class GameEngine {
             player.requestMove(Direction.N);
         }
         if (input.isKey()) {
-        	//regarder dans la direction du player si c'est une porte
-        	//ouvrir la porte = changer le sprite
-        	//supprimer une clé
         	Position nextPos = player.getDirection().nextPosition(player.getPosition());
         	Decor object = game.getWorld().get(nextPos);
         	if (object instanceof DoorUpClosed) {
         		object.crossIt(player);
-        		object = new DoorUpOpenned(); //Je sais pas comment faire
+        	}
+        }
+        if (input.isBomb()){
+        	player.requestBomb();
+        	if(player.bombRequested()) {
+        		player.setBomb(now);
+            	Bomb[] bombs = player.getTabBombs();
+                for(int i=0; i<this.spriteBomb.length; i++) {
+                	Bomb bomb = bombs[i];
+                	if(bomb!=null) {
+                    	this.spriteBomb[i] = SpriteFactory.createBomb(layer, bomb);
+                	}
+                }
         	}
         }
         input.clear();
@@ -159,12 +173,43 @@ public final class GameEngine {
     		game.getWorld().changed();
     	}
     	
-    	for(Monster m : this.monsters) {
-    		m.update(now);
+    	for(int i=0; i<this.monsters.length; i++) {
+    		if(this.monsters[i]!=null) {
+    			this.monsters[i].update(now);
+        		if(!this.monsters[i].alive()) {
+        			this.spriteMonsters[i].remove();
+        			this.spriteMonsters[i]=null;
+        			this.monsters[i]=null;
+        		}
+    		}
     	}
-    	
-        player.update(now);
+    	/*for(Monster m : this.monsters) {
+    		m.update(now);
+    		if(!m.alive()) {
+    			m=null;
+    		}
+    	}*/
+        
+    	Bomb[] tabBombs = this.player.getTabBombs();
+    	for(int i=0; i<tabBombs.length; i++) {
+    		Bomb b = tabBombs[i];
+    		if(b!=null) {
+    			b.update(now);
+    			if(b.getState()==0) {    
+    				if(this.spriteBomb[i]!=null) {
+    					this.spriteBomb[i].remove();
+    					this.spriteBomb[i]=null;
+    				}    					
+    			}
+    			if(b.getState()==-1) {
+    				b=null;
+    				tabBombs[i]=null;    				
+    			}
+    		}
+    	}
 
+    	player.update(now);
+    	
         if (player.isAlive() == false) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
@@ -178,7 +223,15 @@ public final class GameEngine {
     private void render() {
         sprites.forEach(Sprite::render);
         for(Sprite m : this.spriteMonsters) {
-        	m.render();
+        	if(m!=null) {        		
+        		m.render();
+        	}
+        }
+        
+        for(Sprite b : this.spriteBomb) {
+        	if(b!=null) {
+        		b.render();
+        	}
         }
         // last rendering to have player in the foreground
         spritePlayer.render();

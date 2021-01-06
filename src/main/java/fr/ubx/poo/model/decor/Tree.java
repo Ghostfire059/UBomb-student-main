@@ -6,6 +6,11 @@ package fr.ubx.poo.model.decor;
 
 public class Tree extends Decor {
 	
+	@Override
+	public boolean isExplodable() {
+		return false;
+	}
+	
     @Override
     public String toString() {
         return "Tree";

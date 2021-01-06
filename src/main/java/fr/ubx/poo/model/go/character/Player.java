@@ -7,10 +7,9 @@ package fr.ubx.poo.model.go.character;
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.World;
-import fr.ubx.poo.model.Entity;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.decor.*;
-import fr.ubx.poo.model.decor.door.Door;
+import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
 
@@ -26,6 +25,8 @@ public class Player extends GameObject implements Movable {
     private boolean winner = false;
     private boolean invincible = false;
     private long timer = 0;
+    private boolean bombRequested = false;
+    private Bomb oldTabBombs[] = new Bomb[bombs];
 
     public Player(Game game, Position position) {
         super(game, position);
@@ -65,6 +66,11 @@ public class Player extends GameObject implements Movable {
     public int getBombs() {
         return bombs;
     }
+    
+    public Bomb[] getTabBombs() {
+    	return this.oldTabBombs;
+    }
+    
     public void addBombs() {
     	this.bombs = this.bombs + 1;
     }
@@ -86,6 +92,31 @@ public class Player extends GameObject implements Movable {
         return direction;
     }
     
+    public boolean bombRequested() {
+    	return this.bombRequested;
+    }
+    
+    public void requestBomb() {
+    	Position nextPos = this.direction.nextPosition(getPosition());
+    	Decor object = game.getWorld().get(nextPos);
+    	if(object==null && nextPos.inside(this.game.getWorld().dimension) && this.bombs>0) {
+    		bombRequested = true;
+    	}
+    }
+    
+    public void setBomb(long now) {
+    	Position nextPos = this.direction.nextPosition(getPosition());
+    	Decor object = game.getWorld().get(nextPos);
+    	if(object==null && nextPos.inside(this.game.getWorld().dimension)) {
+    		int tmp=0;
+    		while(this.oldTabBombs[tmp]!=null && tmp<this.oldTabBombs.length) {
+    			tmp++;
+    		}
+    		this.oldTabBombs[tmp]=new Bomb(this.game, nextPos, now);
+    	}
+    	this.loseBombs();
+    }
+
     public void winner() {
     	this.winner = true;
     }
@@ -104,15 +135,16 @@ public class Player extends GameObject implements Movable {
     	
     	if(object instanceof Box) {
     		Position furtherPos = direction.nextPosition(nextPos);
-    		Decor furtherObject = game.getWorld().get(furtherPos);
-    		return furtherPos.inside(game.getWorld().dimension) && (furtherObject == null || game.getWorld().getEntity(furtherPos).isCrossable());
+    		return furtherPos.inside(game.getWorld().dimension) && (game.getWorld().get(furtherPos) == null );
     	}
     	return nextPos.inside(game.getWorld().dimension) && (object == null || object.isCrossable()) ;
     }
 
     public void doMove(Direction direction) {
+    	System.out.println("direction" + direction);
         Position nextPos = direction.nextPosition(getPosition());
         setPosition(nextPos);
+        System.out.println("nextpos" + nextPos);
 		World w = game.getWorld();
     	Decor decor = w.get(nextPos);
 		if( decor != null) {
@@ -122,8 +154,10 @@ public class Player extends GameObject implements Movable {
 		}
     	
     	for(Monster m : game.getMonsters()) {
-    		if(this.getPosition().equals(m.getPosition())) {
-    			this.loseLife();
+    		if(m!=null) {    			
+    			if(this.getPosition().equals(m.getPosition())) {
+    				this.loseLife();
+    			}
     		}
     	}
  
