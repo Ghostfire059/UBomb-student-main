@@ -23,4 +23,9 @@ public class Princess extends Decor{
 	public void crossIt(Player player) {
 		player.winner();
 	}
+	
+	@Override
+	public boolean isMonsterAccessible() {
+		return false;
+	}
 }

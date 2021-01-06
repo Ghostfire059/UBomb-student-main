@@ -24,6 +24,10 @@ public class Decor extends Entity {
 		return true;
 	}
 	
+	public boolean isMonsterAccessible() {
+		return true;
+	}
+	
 	public void crossIt(Player player) {}
 	
 }

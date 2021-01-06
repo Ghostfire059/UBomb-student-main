@@ -9,4 +9,8 @@ public class Door extends Decor{
 		return true;
 	}
 
+	@Override
+	public boolean isMonsterAccessible() {
+		return false;
+	}
 }
