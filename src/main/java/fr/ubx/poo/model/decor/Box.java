@@ -7,11 +7,6 @@ import fr.ubx.poo.model.go.character.Player;
 public class Box extends Decor{
 	
 	@Override
-	public boolean isCrossable() {
-		return false;
-	}
-	
-	@Override
 	public boolean isTaken() {
 		return true;
 	}

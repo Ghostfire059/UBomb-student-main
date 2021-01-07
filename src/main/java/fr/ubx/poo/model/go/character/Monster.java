@@ -60,7 +60,7 @@ public class Monster extends GameObject implements Movable{
 		}
 	}
 	
-	private int[][] tradGrid(){
+	/*private int[][] tradGrid(){
 		int n = game.getWorld().dimension.height;
 		int m = game.getWorld().dimension.width;
 		int[][] tab = new int[n][m];
@@ -75,14 +75,17 @@ public class Monster extends GameObject implements Movable{
 			}
 		}
 		return tab;
-	}
+	}*/
 	
 	private Direction chooseDirection() {
 		int level = game.getWorld().level;
-		if (level < 3) { //aléatoire
-			return Direction.random();
-		}
-		if (level < 5) { //dirigé vers player
+		/*if( level > 4) { //le plus court chemin vers le perso
+		int[][] tab = tradGrid();
+		Position posP = game.getPlayer().getPosition();
+		Position posM = this.getPosition();
+		//Trouver un chemin de 0 allant de posM à posP
+		}*/
+		if (level > 2 ) { //dirigé vers player
 			Position posP = game.getPlayer().getPosition();
 			Position posM = this.getPosition();
 			if (posM.x == posP.x) {
@@ -115,21 +118,17 @@ public class Monster extends GameObject implements Movable{
 				return array[rand];
 			}
 		}
-		//le plus court chemin vers le perso
-		//int[][] tab = tradGrid();
-		//Position posP = game.getPlayer().getPosition();
-		//Position posM = this.getPosition();
-		//Trouver un chemin de 0 allant de posM à posP
-		return Direction.N;
+		return Direction.random();
 	}
 	
 	public void update(long now) {
 		long interv = 1500000000;
-		if(game.getWorld().level == 1) interv = 1450000000;
-		if(game.getWorld().level == 2) interv = 1400000000;
-		if(game.getWorld().level == 4) interv = 1350000000;
+		if(game.getWorld().level == 2) interv = 1450000000;
+		if(game.getWorld().level == 4) interv = 1400000000;
 		if(game.getWorld().level == 6) interv = 1300000000;
-		if(game.getWorld().level == 8) interv = 1200000000;
+		if(game.getWorld().level == 7) interv = 1200000000;
+		if(game.getWorld().level == 8) interv = 1100000000;
+		if(game.getWorld().level == 9) interv = 1000000000;
 		if(now-this.prev_move > interv) {
 			requestMove( chooseDirection() );
 			if(this.moveRequested) {

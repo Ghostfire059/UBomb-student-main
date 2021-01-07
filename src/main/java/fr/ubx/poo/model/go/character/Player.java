@@ -131,8 +131,7 @@ public class Player extends GameObject implements Movable {
     	
     	if(object instanceof Box) {
     		Position furtherPos = direction.nextPosition(nextPos);
-    		Decor furtherObject = game.getWorld().get(furtherPos);
-    		return furtherPos.inside(game.getWorld().dimension) && (furtherObject == null || game.getWorld().getEntity(furtherPos).isCrossable());
+    		return furtherPos.inside(game.getWorld().dimension) && (game.getWorld().get(furtherPos) == null );
     	}
     	return nextPos.inside(game.getWorld().dimension) && (object == null || object.isCrossable()) ;
     }

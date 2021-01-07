@@ -15,13 +15,7 @@ public class World {
     private final WorldEntity[][] raw;
     public final Dimension dimension;
     private boolean changed = true;
-    public int level = 0;
-
-    public World(WorldEntity[][] raw) {
-        this.raw = raw;
-        dimension = new Dimension(raw.length, raw[0].length);
-        grid = WorldBuilder.build(raw, dimension);
-    }
+    public final int level;
     
     public World(WorldEntity[][] raw, int level) {
         this.raw = raw;
@@ -39,6 +33,28 @@ public class World {
             }
         }
         throw new PositionNotFoundException("Player");
+    }
+    
+    public Position findDoorDown() throws PositionNotFoundException {
+        for (int x = 0; x < dimension.width; x++) {
+            for (int y = 0; y < dimension.height; y++) {
+                if (raw[y][x] == WorldEntity.DoorPrevOpened) {
+                    return new Position(x, y);
+                }
+            }
+        }
+        throw new PositionNotFoundException("DoorDown");
+    }
+    
+    public Position findDoorUpOpened() throws PositionNotFoundException {
+        for (int x = 0; x < dimension.width; x++) {
+            for (int y = 0; y < dimension.height; y++) {
+                if (raw[y][x] == WorldEntity.DoorNextOpened) {
+                    return new Position(x, y);
+                }
+            }
+        }
+        throw new PositionNotFoundException("DoorUpOpened");
     }
     
     public Position[] findMonsters() throws PositionNotFoundException{
@@ -98,4 +114,5 @@ public class World {
     public void changed() {
     	this.changed = !this.changed;
     }
+    
 }

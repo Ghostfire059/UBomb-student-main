@@ -9,7 +9,6 @@ public class BombNb extends Decor{
 		return true;
 	}
 	
-
 	@Override
 	public boolean isTaken() {
 		return true;
