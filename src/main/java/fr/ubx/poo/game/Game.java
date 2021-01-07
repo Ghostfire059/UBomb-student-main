@@ -51,18 +51,12 @@ public class Game {
         tabWorld[0] = new World( level1 , 1);
         WorldEntity[][] level2 = parse(worldPath+"/level2.txt");
         tabWorld[1] = new World( level2 , 2);
-        //WorldEntity[][] level3 = parse(worldPath+"/level3.txt");
-        //tabWorld[2] = new World( level3 , 3);
+        WorldEntity[][] level3 = parse(worldPath+"/level3.txt");
+        tabWorld[2] = new World( level3 , 3);
         Position positionPlayer = null;
         Position[] positionsMonsters = null;
         try {
     		positionPlayer = tabWorld[0].findPlayer();
-        	if( predIndiceWorld - indiceWorld < 0 ) {
-        		positionPlayer = tabWorld[0].findDoorDown();
-        	}
-        	if( predIndiceWorld - indiceWorld > 0 ) {
-        		positionPlayer = tabWorld[0].findDoorUpOpened();
-        	}
             player = new Player(this, positionPlayer); 
             positionsMonsters = tabWorld[indiceWorld].findMonsters();
             int nbMonsters = positionsMonsters.length;
@@ -160,6 +154,10 @@ public class Game {
 
     public World getWorld() {
     	return tabWorld[indiceWorld];
+    }
+    
+    public World getPredWorld() {
+    	return tabWorld[predIndiceWorld];
     }
 
     public Player getPlayer() {
