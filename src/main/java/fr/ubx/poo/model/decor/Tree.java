@@ -11,6 +11,11 @@ public class Tree extends Decor {
 		return false;
 	}
 	
+	@Override
+	public boolean isMonsterAccessible() {
+		return false;
+	}
+	
     @Override
     public String toString() {
         return "Tree";
