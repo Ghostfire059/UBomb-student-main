@@ -16,22 +16,12 @@ public class World {
     public final Dimension dimension;
     private boolean changed = true;
     public final int level;
-    private boolean actived;
-
-    public World(WorldEntity[][] raw) {
-        this.raw = raw;
-        dimension = new Dimension(raw.length, raw[0].length);
-        grid = WorldBuilder.build(raw, dimension);
-        this.level = 0;
-        this.actived = true;
-    }
     
     public World(WorldEntity[][] raw, int level) {
         this.raw = raw;
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
         this.level = level;
-        this.actived = false;
     }
 
     public Position findPlayer() throws PositionNotFoundException {
@@ -43,6 +33,28 @@ public class World {
             }
         }
         throw new PositionNotFoundException("Player");
+    }
+    
+    public Position findDoorDown() throws PositionNotFoundException {
+        for (int x = 0; x < dimension.width; x++) {
+            for (int y = 0; y < dimension.height; y++) {
+                if (raw[y][x] == WorldEntity.DoorPrevOpened) {
+                    return new Position(x, y);
+                }
+            }
+        }
+        throw new PositionNotFoundException("DoorDown");
+    }
+    
+    public Position findDoorUpOpened() throws PositionNotFoundException {
+        for (int x = 0; x < dimension.width; x++) {
+            for (int y = 0; y < dimension.height; y++) {
+                if (raw[y][x] == WorldEntity.DoorNextOpened) {
+                    return new Position(x, y);
+                }
+            }
+        }
+        throw new PositionNotFoundException("DoorUpOpened");
     }
     
     public Position[] findMonsters() throws PositionNotFoundException{
@@ -103,11 +115,4 @@ public class World {
     	this.changed = !this.changed;
     }
     
-    public boolean isActived() {
-    	return this.actived;
-    }
-    
-    public void actived() {
-    	this.actived = !this.actived;
-    }
 }
