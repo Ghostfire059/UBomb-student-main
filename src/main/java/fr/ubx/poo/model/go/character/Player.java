@@ -97,22 +97,18 @@ public class Player extends GameObject implements Movable {
     }
     
     public void requestBomb() {
-    	Position nextPos = this.direction.nextPosition(getPosition());
-    	Decor object = game.getWorld().get(nextPos);
-    	if(object==null && nextPos.inside(this.game.getWorld().dimension) && this.bombs>0) {
+    	if(this.getPosition().inside(this.game.getWorld().dimension) && this.bombs>0) {
     		bombRequested = true;
     	}
     }
     
     public void setBomb(long now) {
-    	Position nextPos = this.direction.nextPosition(getPosition());
-    	Decor object = game.getWorld().get(nextPos);
-    	if(object==null && nextPos.inside(this.game.getWorld().dimension)) {
+    	if(this.getPosition().inside(this.game.getWorld().dimension)) {
     		int tmp=0;
     		while(this.oldTabBombs[tmp]!=null && tmp<this.oldTabBombs.length) {
     			tmp++;
     		}
-    		this.oldTabBombs[tmp]=new Bomb(this.game, nextPos, now);
+    		this.oldTabBombs[tmp]=new Bomb(this.game, this.getPosition(), now);
     	}
     	this.loseBombs();
     }

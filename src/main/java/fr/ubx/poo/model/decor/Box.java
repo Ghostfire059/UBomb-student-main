@@ -25,6 +25,11 @@ public class Box extends Decor{
 		w.changed();
 	}
 	
+	@Override
+	public boolean isMonsterAccessible() {
+		return false;
+	}
+	
 	public String toString() {
 		return "Box";
 	}
