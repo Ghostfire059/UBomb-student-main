@@ -26,8 +26,8 @@ public class Game {
     public int nbrLevels;
 
     public Game(String worldPath) {	
-        world = new WorldStatic();
-        WorldEntity[][] level1 = parse(worldPath+"/level1.txt");
+        WorldEntity[][] level1 = parse(worldPath+"/level2.txt");
+        world = new World(level1, 1);
         this.worldPath = worldPath;
         loadConfig(worldPath);
         Position positionPlayer = null;
@@ -80,7 +80,7 @@ public class Game {
     			}
     		}
     		lineLength/=nbrLines;
-    		WorldEntity world[][] = new WorldEntity[nbrLines][lineLength];
+    		WorldEntity world[][] = new WorldEntity[nbrLines][lineLength-1];
     		for(int i=0; i<nbrLines; i++) {
     			for(int j=0; j<lineLength; j++) {
     				char c = (char)byteArray[i*lineLength+j];
