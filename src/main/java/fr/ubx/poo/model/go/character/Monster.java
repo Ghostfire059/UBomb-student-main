@@ -60,31 +60,8 @@ public class Monster extends GameObject implements Movable{
 		}
 	}
 	
-	/*private int[][] tradGrid(){
-		int n = game.getWorld().dimension.height;
-		int m = game.getWorld().dimension.width;
-		int[][] tab = new int[n][m];
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				Decor decor = game.getWorld().get(new Position(i,j));
-				if( decor == null || decor.isCrossable() ) {
-					tab[i][j] = 0;
-				}else {
-					tab[i][j] = 1;
-				}
-			}
-		}
-		return tab;
-	}*/
-	
 	private Direction chooseDirection() {
 		int level = game.getWorld().level;
-		/*if( level > 4) { //le plus court chemin vers le perso
-		int[][] tab = tradGrid();
-		Position posP = game.getPlayer().getPosition();
-		Position posM = this.getPosition();
-		//Trouver un chemin de 0 allant de posM à posP
-		}*/
 		if (level > 2 ) { //dirigé vers player
 			Position posP = game.getPlayer().getPosition();
 			Position posM = this.getPosition();
@@ -106,11 +83,11 @@ public class Monster extends GameObject implements Movable{
 				return array[rand];
 			}
 			if (posP.y < posM.y && posP.x > posM.x) {
-				Direction[] array = {Direction.S, Direction.W};
+				Direction[] array = {Direction.N, Direction.E};
 				return array[rand];
 			}
 			if (posP.y > posM.y && posP.x < posM.x) {
-				Direction[] array = {Direction.N, Direction.E};
+				Direction[] array = {Direction.S, Direction.W};
 				return array[rand];
 			}
 			if (posP.y > posM.y && posP.x > posM.x) {
@@ -122,12 +99,13 @@ public class Monster extends GameObject implements Movable{
 	}
 	
 	public void update(long now) {
-		long interv = 1500000000;
-		if(game.getWorld().level == 2) interv = 1450000000;
+		long interv = 1560000000;
+		if(game.getWorld().level == 2) interv = 1480000000;
 		if(game.getWorld().level == 4) interv = 1400000000;
-		if(game.getWorld().level == 6) interv = 1300000000;
-		if(game.getWorld().level == 7) interv = 1200000000;
-		if(game.getWorld().level == 8) interv = 1100000000;
+		if(game.getWorld().level == 5) interv = 1320000000;
+		if(game.getWorld().level == 6) interv = 1240000000;
+		if(game.getWorld().level == 7) interv = 1160000000;
+		if(game.getWorld().level == 8) interv = 1080000000;
 		if(game.getWorld().level == 9) interv = 1000000000;
 		if(now-this.prev_move > interv) {
 			requestMove( chooseDirection() );
