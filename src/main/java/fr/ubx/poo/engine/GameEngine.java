@@ -51,8 +51,9 @@ public final class GameEngine {
         this.player = game.getPlayer();
         this.monsters = game.getMonsters();
         this.spriteMonsters = new Sprite[this.game.getNbrLevels()][];
-        this.spriteBomb = new Sprite[this.game.getNbrLevels()][];
         initialize(stage, game);
+       	int nbrBombMax = 3+this.game.getWorld().findNbrBombMax();     	
+        this.spriteBomb = new Sprite[this.game.getNbrLevels()][nbrBombMax];
         buildAndSetGameLoop();
     }
 
@@ -87,7 +88,6 @@ public final class GameEngine {
         		this.spriteMonsters[this.game.getIndice()][i] = SpriteFactory.createMonster(layer, monsters[this.game.getIndice()][i]);        		
         	}
         }
-        this.spriteBomb[this.game.getIndice()] = new Sprite[player.getBombs()];
     }
 
     protected final void buildAndSetGameLoop() {
@@ -136,8 +136,6 @@ public final class GameEngine {
         	if(player.bombRequested()) {
         		player.setBomb(now);
             	Bomb[] bombs = player.getTabBombs();
-            	System.out.println(bombs.length);
-            	System.out.println(this.spriteBomb[this.game.getIndice()].length);
                 for(int i=0; i<this.spriteBomb[this.game.getIndice()].length; i++) {
                 	Bomb bomb = bombs[i];
                 	if(bomb!=null) {
@@ -218,15 +216,14 @@ public final class GameEngine {
         }
         
         if(game.getWorld().hasChanged()) {
-    		sprites.forEach(Sprite::remove);
-    		sprites.clear();
-            initialize(stage, game);
-    		game.getWorld().changed();
-    	}
+        	sprites.forEach(Sprite::remove);
+        	sprites.clear();
+        	initialize(stage, game);
+        	game.getWorld().changed();
+        }
     }
 
     private void render() {
-        sprites.forEach(Sprite::render);
         for(Sprite m : this.spriteMonsters[this.game.getIndice()]) {
         	if(m!=null) {        		
         		m.render();
@@ -238,9 +235,9 @@ public final class GameEngine {
         		b.render();
         	}
         }
+        sprites.forEach(Sprite::render);
         // last rendering to have player in the foreground
-        spritePlayer.render();
-        
+        spritePlayer.render();        
     }
 
     public void start() {
