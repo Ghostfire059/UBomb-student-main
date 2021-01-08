@@ -18,11 +18,5 @@ public class DoorUpOpened extends DoorUp{
 	@Override
 	public void crossIt(Player player) {
 		player.getGame().levelUp();
-		try {
-			player.setPosition(player.getGame().getWorld().findDoorDown());
-		}  catch (PositionNotFoundException e) {
-            System.err.println("Position not found : " + e.getLocalizedMessage());
-            throw new RuntimeException(e);
-        }
 	}
 }
