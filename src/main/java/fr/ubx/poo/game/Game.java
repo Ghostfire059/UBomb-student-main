@@ -42,6 +42,7 @@ public class Game {
     private String prefix;
     private int indiceWorld;
     private int predIndiceWorld;
+    private int nbrBombsMax;
 
     public Game(String worldPath) {
         this.worldPath = worldPath;
@@ -53,7 +54,7 @@ public class Game {
         Monster[][] monsters = new Monster[this.nbrLevels][];
         try {
         	for(int i = 0; i < nbrLevels; i++) {
-        		WorldEntity[][] level = parse(worldPath+"/level"+(i+1)+".txt");
+        		WorldEntity[][] level = parse(worldPath+"/"+this.prefix+(i+1)+".txt");
         		tabWorld[i] = new World(level , i+1);
         		positionsMonsters = tabWorld[i].findMonsters();
         		int nbMonsters = positionsMonsters.length;
@@ -61,10 +62,11 @@ public class Game {
         		for(int j = 0; j<nbMonsters; j++) {
         			monsters[i][j] = new Monster(this, positionsMonsters[j]);
         		}
+        		nbrBombsMax+=tabWorld[i].findNbrBombMax();
         	}
         	this.monsters = monsters;
     		positionPlayer = tabWorld[0].findPlayer();
-            player = new Player(this, positionPlayer); 
+            player = new Player(this, positionPlayer, nbrBombsMax); 
         } catch (PositionNotFoundException e) {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
@@ -82,6 +84,9 @@ public class Game {
             prop.load(input);
             initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
             nbrLevels = Integer.parseInt(prop.getProperty("levels","3"));
+            prefix = prop.getProperty("prefix", "level");
+            nbrBombsMax = Integer.parseInt(prop.getProperty("bombs", "3"));
+            
         } catch (IOException ex) {
             System.err.println("Error loading configuration");
         }

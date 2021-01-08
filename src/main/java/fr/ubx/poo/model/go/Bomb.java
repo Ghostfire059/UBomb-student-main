@@ -26,11 +26,13 @@ public class Bomb extends GameObject{
 	private int state = 4;
 	private Position[] eTab;
 	private boolean exploded = false;
+	private int levelIndice;
 	
 	public Bomb(Game game, Position position, long now) {
 		super(game, position);
 		this.creation_time = now;
 		this.scope = game.getPlayer().getScope();
+		this.levelIndice = this.game.getIndice();
 	}
 	
 	public long getCreationTime() {
@@ -41,7 +43,7 @@ public class Bomb extends GameObject{
 		return this.state;
 	}
 	
-	public void explode() {
+	public void explode(long now) {
 		World w = this.game.getWorld();
 		Direction[] dirTab = {Direction.N, Direction.E, Direction.S, Direction.W};
 		Position[] explosionTab = new Position[this.scope*dirTab.length];
@@ -64,7 +66,8 @@ public class Bomb extends GameObject{
 			}
 		}
 		
-		Monster[] mTab = game.getMonsters()[game.getIndice()];
+		Monster[] mTab = game.getMonsters()[levelIndice];
+		Bomb[] bTab = game.getPlayer().getTabBombs();
 		//use explosion tab to:
 		for(Position p:explosionTab) {
 			if(p!=null) {
@@ -77,8 +80,17 @@ public class Bomb extends GameObject{
 				}
 				//kill monster
 				for(Monster m:mTab) {
-					if(p.equals(m.getPosition())) {
-						m.die();
+					if(m!=null) {
+						if(p.equals(m.getPosition())) {
+							m.die();
+						}						
+					}
+				}
+				for(Bomb b:bTab) {
+					if(b!=null) {
+						if(p.equals(b.getPosition())) {
+							b.creation_time = now-4*SEC;
+						}
 					}
 				}
 			}
@@ -104,13 +116,13 @@ public class Bomb extends GameObject{
 		if(delta>=4 && delta<5) {
 			this.state = 0;
 			if(!this.exploded) {
-				this.explode();				
+				this.explode(now);				
+				game.getPlayer().addBombs();
 			}
 		}
 		//clear explosion's sprites
-		if(delta>=5 && delta<6) {
+		if(delta>=5) {
 			this.state = -1;
-			game.getPlayer().addBombs();
 			World w = this.game.getWorld();
 			for(Position p:this.eTab) {
 				if(p!=null) {

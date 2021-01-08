@@ -59,6 +59,7 @@ public class World {
         throw new PositionNotFoundException("DoorUpOpened");
     }
     
+    
     public Position[] findMonsters() throws PositionNotFoundException{
     	Position[] tmp= new Position[100];
     	int cpt=0;
@@ -75,6 +76,18 @@ public class World {
     		tabPos[i] = tmp[i];
     	}
     	return tabPos;
+    }
+    
+    public int findNbrBombMax(){
+    	int nbr=0;
+    	for(int x=0; x<this.dimension.width; x++) {
+    		for(int y=0; y<this.dimension.height; y++) {
+    			if(this.raw[y][x] == WorldEntity.BombNumberInc) {
+    				nbr++;
+    			}
+    		}
+    	}
+    	return nbr;
     }
 
     public Decor get(Position position) {

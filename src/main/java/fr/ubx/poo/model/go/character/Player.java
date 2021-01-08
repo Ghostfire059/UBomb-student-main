@@ -26,12 +26,13 @@ public class Player extends GameObject implements Movable {
     private boolean invincible = false;
     private long timer = 0;
     private boolean bombRequested = false;
-    private Bomb oldTabBombs[] = new Bomb[bombs];
+    private Bomb tabBombs[];
 
-    public Player(Game game, Position position) {
+    public Player(Game game, Position position, int nbrBombMax) {
         super(game, position);
         this.direction = Direction.S;
         this.lives = game.getInitPlayerLives();
+        this.tabBombs = new Bomb[nbrBombMax];
     }
     
     public Game getGame() {
@@ -68,7 +69,7 @@ public class Player extends GameObject implements Movable {
     }
     
     public Bomb[] getTabBombs() {
-    	return this.oldTabBombs;
+    	return this.tabBombs;
     }
     
     public void addBombs() {
@@ -105,10 +106,10 @@ public class Player extends GameObject implements Movable {
     public void setBomb(long now) {
     	if(this.getPosition().inside(this.game.getWorld().dimension)) {
     		int tmp=0;
-    		while(this.oldTabBombs[tmp]!=null && tmp<this.oldTabBombs.length) {
+    		while(this.tabBombs[tmp]!=null && tmp<this.tabBombs.length) {
     			tmp++;
     		}
-    		this.oldTabBombs[tmp]=new Bomb(this.game, this.getPosition(), now);
+    		this.tabBombs[tmp]=new Bomb(this.game, this.getPosition(), now);
     	}
     	this.loseBombs();
     }
@@ -131,6 +132,13 @@ public class Player extends GameObject implements Movable {
     	
     	if(object instanceof Box) {
     		Position furtherPos = direction.nextPosition(nextPos);
+    		for(Monster m:this.game.getMonsters()[game.getIndice()]) {
+    			if(m!=null) {
+    				if(m.getPosition().equals(furtherPos)) {
+    					return false;
+    				}
+    			}
+    		}
     		return furtherPos.inside(game.getWorld().dimension) && (game.getWorld().get(furtherPos) == null );
     	}
     	return nextPos.inside(game.getWorld().dimension) && (object == null || object.isCrossable()) ;

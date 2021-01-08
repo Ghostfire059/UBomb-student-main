@@ -18,7 +18,7 @@ public class Main extends Application {
         ImageFactory.getInstance().load();
         String path = getClass().getResource("/sample").getFile();
         Game game = new Game(path);
-        GameEngine engine = new GameEngine("UBomb", game, stage);
+        GameEngine engine = new GameEngine("UBomb Berasateguy/Guimberteau", game, stage);
         engine.start();
     }
 
