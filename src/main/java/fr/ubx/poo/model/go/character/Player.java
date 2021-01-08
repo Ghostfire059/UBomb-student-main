@@ -58,9 +58,7 @@ public class Player extends GameObject implements Movable {
     	this.keys = this.keys + 1;
     }
     public void loseKeys() {
-    	if(this.keys > 0 ) {
-    		this.keys -= 1;
-    	}
+    	this.keys -= 1;
     }
     
     public int getBombs() {
