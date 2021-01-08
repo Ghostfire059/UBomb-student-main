@@ -33,6 +33,7 @@ public class Player extends GameObject implements Movable {
         this.direction = Direction.S;
         this.lives = game.getInitPlayerLives();
         this.tabBombs = new Bomb[nbrBombMax];
+        this.bombs = game.getInitPlayerBombs();
     }
     
     public Game getGame() {
@@ -98,6 +99,9 @@ public class Player extends GameObject implements Movable {
     public void requestBomb() {
     	if(this.getPosition().inside(this.game.getWorld().dimension) && this.bombs>0) {
     		bombRequested = true;
+    	}
+    	else {
+    		bombRequested = false;
     	}
     }
     

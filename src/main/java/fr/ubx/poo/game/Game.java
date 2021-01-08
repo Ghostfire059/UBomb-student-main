@@ -24,6 +24,7 @@ public class Game {
     private String prefix;
     private int indiceWorld;
     private int predIndiceWorld;
+    private int startingBombs;
     private int nbrBombsMax;
 
     public Game(String worldPath) {
@@ -31,6 +32,7 @@ public class Game {
         loadConfig(worldPath);
         tabWorld = new World[nbrLevels];
     	indiceWorld = 0;
+    	nbrBombsMax = startingBombs;
         Position positionPlayer = null;
         Position[] positionsMonsters = null;
         Monster[][] monsters = new Monster[this.nbrLevels][];
@@ -67,8 +69,7 @@ public class Game {
             initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
             nbrLevels = Integer.parseInt(prop.getProperty("levels","3"));
             prefix = prop.getProperty("prefix", "level");
-            nbrBombsMax = Integer.parseInt(prop.getProperty("bombs", "3"));
-            
+            startingBombs = Integer.parseInt(prop.getProperty("bombs", "3"));
         } catch (IOException ex) {
             System.err.println("Error loading configuration");
         }
@@ -189,6 +190,10 @@ public class Game {
     
     public World[] getTabWorld() {
     	return this.tabWorld;
+    }
+    
+    public int getInitPlayerBombs() {
+    	return this.startingBombs;
     }
 
 }
