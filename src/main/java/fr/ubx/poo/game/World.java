@@ -7,6 +7,7 @@ package fr.ubx.poo.game;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.decor.door.DoorDown;
 import fr.ubx.poo.model.decor.door.DoorUpOpened;
+import fr.ubx.poo.model.go.character.Monster;
 
 import java.util.Collection;
 import java.util.Map;
@@ -18,12 +19,14 @@ public class World {
     public final Dimension dimension;
     private boolean changed = true;
     public final int level;
+    private Monster[] monsters;
     
-    public World(WorldEntity[][] raw, int level) {
+    public World(WorldEntity[][] raw, int level, Monster[] monsters) {
         this.raw = raw;
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
         this.level = level;
+        this.monsters = monsters;
     }
 
     public Position findPlayer() throws PositionNotFoundException {
@@ -115,6 +118,10 @@ public class World {
     
     public void changed() {
     	this.changed = !this.changed;
+    }
+    
+    public Monster[] getMonsters() {
+    	return this.monsters;
     }
     
 }
