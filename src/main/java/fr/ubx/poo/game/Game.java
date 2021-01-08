@@ -39,6 +39,7 @@ public class Game {
     private final String worldPath;
     private int initPlayerLives;
     private int nbrLevels;
+    private String prefix;
     private int indiceWorld;
 
     public Game(String worldPath) {
@@ -46,23 +47,21 @@ public class Game {
         loadConfig(worldPath);
         tabWorld = new World[nbrLevels];
     	indiceWorld = 0;
-        WorldEntity[][] level1 = parse(worldPath+"/level1.txt");
-        tabWorld[0] = new World( level1 , 1);
-        WorldEntity[][] level2 = parse(worldPath+"/level2.txt");
-        tabWorld[1] = new World( level2 , 2);
-        WorldEntity[][] level3 = parse(worldPath+"/level3.txt");
-        tabWorld[2] = new World( level3 , 3);
         Position positionPlayer = null;
         Position[] positionsMonsters = null;
         try {
+        	for(int i = 0; i < nbrLevels; i++) {
+        		WorldEntity[][] level = parse(worldPath+"/"+prefix+(i+1)+".txt");
+        		positionsMonsters = tabWorld[i].findMonsters();
+                int nbMonsters = positionsMonsters.length;
+            	monsters = new Monster[nbMonsters];
+                for(int j = 0; i<nbMonsters; j++) {
+                	monsters[j] = new Monster(this, positionsMonsters[j]);
+                }
+                tabWorld[i] = new World( level , i+1);
+        	}
     		positionPlayer = tabWorld[0].findPlayer();
             player = new Player(this, positionPlayer); 
-            positionsMonsters = tabWorld[indiceWorld].findMonsters();
-            int nbMonsters = positionsMonsters.length;
-        	monsters = new Monster[nbMonsters];
-            for(int i=0; i<nbMonsters; i++) {
-            	monsters[i] = new Monster(this, positionsMonsters[i]);
-            }
         } catch (PositionNotFoundException e) {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
@@ -80,6 +79,7 @@ public class Game {
             prop.load(input);
             initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
             nbrLevels = Integer.parseInt(prop.getProperty("levels","3"));
+            prefix = prop.getProperty("prefix");
         } catch (IOException ex) {
             System.err.println("Error loading configuration");
         }
