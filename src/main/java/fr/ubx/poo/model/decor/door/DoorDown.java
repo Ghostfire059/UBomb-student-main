@@ -18,12 +18,6 @@ public class DoorDown extends Door{
 	@Override
 	public void crossIt(Player player) {
 		player.getGame().levelDown();
-		try {
-			player.setPosition(player.getGame().getPredWorld().findDoorUpOpened());
-		}  catch (PositionNotFoundException e) {
-            System.err.println("Position not found : " + e.getLocalizedMessage());
-            throw new RuntimeException(e);
-        }
 	}
 	
 }

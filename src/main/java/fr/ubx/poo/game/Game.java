@@ -40,7 +40,6 @@ public class Game {
     private int initPlayerLives;
     private int nbrLevels;
     private int indiceWorld;
-    private int predIndiceWorld;
 
     public Game(String worldPath) {
         this.worldPath = worldPath;
@@ -64,7 +63,6 @@ public class Game {
             for(int i=0; i<nbMonsters; i++) {
             	monsters[i] = new Monster(this, positionsMonsters[i]);
             }
-            
         } catch (PositionNotFoundException e) {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
@@ -156,8 +154,8 @@ public class Game {
     	return tabWorld[indiceWorld];
     }
     
-    public World getPredWorld() {
-    	return tabWorld[predIndiceWorld];
+    public World getLevelWorld(int level) {
+    	return tabWorld[level-1];
     }
 
     public Player getPlayer() {
@@ -169,13 +167,39 @@ public class Game {
     }
     
     public void levelDown() {
-    	this.predIndiceWorld = indiceWorld;
     	this.indiceWorld = indiceWorld - 1;
+		try {
+			player.setPosition(tabWorld[indiceWorld].findDoorUpOpened());
+	        Position[] positionsMonsters = null;
+			positionsMonsters = tabWorld[indiceWorld].findMonsters();
+            int nbMonsters = positionsMonsters.length;
+        	monsters = new Monster[nbMonsters];
+            for(int i=0; i<nbMonsters; i++) {
+            	monsters[i] = new Monster(this, positionsMonsters[i]);
+            }
+            tabWorld[indiceWorld].changed();
+		}  catch (PositionNotFoundException e) {
+            System.err.println("Position not found : " + e.getLocalizedMessage());
+            throw new RuntimeException(e);
+        }
     }
     
     public void levelUp() {
-    	this.predIndiceWorld = indiceWorld;
     	this.indiceWorld = indiceWorld + 1;
+		try {
+			player.setPosition(tabWorld[indiceWorld].findDoorDown());
+	        Position[] positionsMonsters = null;
+			positionsMonsters = tabWorld[indiceWorld].findMonsters();
+            int nbMonsters = positionsMonsters.length;
+        	monsters = new Monster[nbMonsters];
+            for(int i=0; i<nbMonsters; i++) {
+            	monsters[i] = new Monster(this, positionsMonsters[i]);
+            }
+            tabWorld[indiceWorld].changed();
+		}  catch (PositionNotFoundException e) {
+            System.err.println("Position not found : " + e.getLocalizedMessage());
+            throw new RuntimeException(e);
+        }
     }
 
 }
