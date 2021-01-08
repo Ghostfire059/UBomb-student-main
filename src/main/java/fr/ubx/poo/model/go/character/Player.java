@@ -147,7 +147,7 @@ public class Player extends GameObject implements Movable {
 	    	}
 		}
     	
-    	for(Monster m : game.getMonsters()) {
+    	for(Monster m : game.getMonsters()[game.getIndice()]) {
     		if(m!=null) {    			
     			if(this.getPosition().equals(m.getPosition())) {
     				this.loseLife();

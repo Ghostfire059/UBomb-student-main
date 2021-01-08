@@ -35,21 +35,23 @@ public final class GameEngine {
     private final String windowTitle;
     private final Game game;
     private final Player player;
-    private Monster monsters[];
+    private Monster monsters[][];
     private final List<Sprite> sprites = new ArrayList<>();
     private StatusBar statusBar;
     private Pane layer;
     private Input input;
     private Stage stage;
     private Sprite spritePlayer;
-    private Sprite spriteMonsters[];
-    private Sprite spriteBomb[];
+    private Sprite spriteMonsters[][];
+    private Sprite spriteBomb[][];
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
         this.game = game;
         this.player = game.getPlayer();
         this.monsters = game.getMonsters();
+        this.spriteMonsters = new Sprite[this.game.getNbrLevels()][];
+        this.spriteBomb = new Sprite[this.game.getNbrLevels()][];
         initialize(stage, game);
         buildAndSetGameLoop();
     }
@@ -78,25 +80,25 @@ public final class GameEngine {
         game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
         //Create go sprites
         spritePlayer = SpriteFactory.createPlayer(layer, player);
-        int nbMonsters = monsters.length;
-        this.spriteMonsters = new Sprite[nbMonsters];
+        int nbMonsters = monsters[this.game.getIndice()].length;
+        this.spriteMonsters[this.game.getIndice()] = new Sprite[nbMonsters];
         for(int i=0; i<nbMonsters; i++) {
-        	if(monsters[i]!=null) {
-        		this.spriteMonsters[i] = SpriteFactory.createMonster(layer, monsters[i]);        		
+        	if(monsters[this.game.getIndice()][i]!=null) {
+        		this.spriteMonsters[this.game.getIndice()][i] = SpriteFactory.createMonster(layer, monsters[this.game.getIndice()][i]);        		
         	}
         }
-        this.spriteBomb = new Sprite[player.getBombs()];
+        this.spriteBomb[this.game.getIndice()] = new Sprite[player.getBombs()];
     }
 
     protected final void buildAndSetGameLoop() {
         gameLoop = new AnimationTimer() {
             public void handle(long now) {
                 // Check keyboard actions
-                processInput(now);
+            	processInput(now);
 
                 // Do actions
                 update(now);
-
+                
                 // Graphic update
                 render();
                 statusBar.update(game);
@@ -134,10 +136,12 @@ public final class GameEngine {
         	if(player.bombRequested()) {
         		player.setBomb(now);
             	Bomb[] bombs = player.getTabBombs();
-                for(int i=0; i<this.spriteBomb.length; i++) {
+            	System.out.println(bombs.length);
+            	System.out.println(this.spriteBomb[this.game.getIndice()].length);
+                for(int i=0; i<this.spriteBomb[this.game.getIndice()].length; i++) {
                 	Bomb bomb = bombs[i];
                 	if(bomb!=null) {
-                    	this.spriteBomb[i] = SpriteFactory.createBomb(layer, bomb);
+                    	this.spriteBomb[this.game.getIndice()][i] = SpriteFactory.createBomb(layer, bomb);
                 	}
                 }
         	}
@@ -165,40 +169,29 @@ public final class GameEngine {
     }
 
 
-    private void update(long now) {
-    	if(game.getWorld().hasChanged()) {
-    		sprites.forEach(Sprite::remove);
-    		sprites.clear();
-    		initialize(stage, game);
-    		game.getWorld().changed();
-    	}
-    	
-    	for(int i=0; i<this.monsters.length; i++) {
-    		if(this.monsters[i]!=null) {
-    			this.monsters[i].update(now);
-        		if(!this.monsters[i].alive()) {
-        			this.spriteMonsters[i].remove();
-        			this.spriteMonsters[i]=null;
-        			this.monsters[i]=null;
-        		}
+    private void update(long now) {    	
+    	int indice = this.game.getIndice();
+    	Monster[] tabMonsters = this.monsters[indice];
+    	for(int i=0; i< tabMonsters.length; i++) {
+    		if(tabMonsters[i]!=null) {
+    			tabMonsters[i].update(now);
+    			if(!tabMonsters[i].alive()) {
+    				this.spriteMonsters[indice][i].remove();
+        			this.spriteMonsters[indice][i]=null;
+        			this.monsters[indice][i]=null;
+    			}
     		}
     	}
-    	/*for(Monster m : this.monsters) {
-    		m.update(now);
-    		if(!m.alive()) {
-    			m=null;
-    		}
-    	}*/
         
     	Bomb[] tabBombs = this.player.getTabBombs();
     	for(int i=0; i<tabBombs.length; i++) {
     		Bomb b = tabBombs[i];
     		if(b!=null) {
     			b.update(now);
-    			if(b.getState()==0) {    
-    				if(this.spriteBomb[i]!=null) {
-    					this.spriteBomb[i].remove();
-    					this.spriteBomb[i]=null;
+    			if(b.getState()==0) {  
+    				if(this.spriteBomb[this.game.getIndice()][i]!=null) {
+    					this.spriteBomb[this.game.getIndice()][i].remove();
+    					this.spriteBomb[this.game.getIndice()][i]=null;
     				}    					
     			}
     			if(b.getState()==-1) {
@@ -208,7 +201,12 @@ public final class GameEngine {
     		}
     	}
 
+    	int activeLevel = game.getIndice();
     	player.update(now);
+    	int newActiveLevel = game.getIndice();
+    	if(activeLevel!=newActiveLevel) {
+    		initialize(stage, game);
+    	}
     	
         if (player.isAlive() == false) {
             gameLoop.stop();
@@ -218,17 +216,24 @@ public final class GameEngine {
             gameLoop.stop();
             showMessage("Gagné", Color.BLUE);
         }
+        
+        if(game.getWorld().hasChanged()) {
+    		sprites.forEach(Sprite::remove);
+    		sprites.clear();
+            initialize(stage, game);
+    		game.getWorld().changed();
+    	}
     }
 
     private void render() {
         sprites.forEach(Sprite::render);
-        for(Sprite m : this.spriteMonsters) {
+        for(Sprite m : this.spriteMonsters[this.game.getIndice()]) {
         	if(m!=null) {        		
         		m.render();
         	}
         }
         
-        for(Sprite b : this.spriteBomb) {
+        for(Sprite b : this.spriteBomb[this.game.getIndice()]) {
         	if(b!=null) {
         		b.render();
         	}

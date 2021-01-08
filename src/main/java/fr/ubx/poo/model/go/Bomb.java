@@ -64,7 +64,7 @@ public class Bomb extends GameObject{
 			}
 		}
 		
-		Monster[] mTab = game.getMonsters();
+		Monster[] mTab = game.getMonsters()[game.getIndice()];
 		//use explosion tab to:
 		for(Position p:explosionTab) {
 			if(p!=null) {
