@@ -5,6 +5,8 @@
 package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.decor.door.DoorDown;
+import fr.ubx.poo.model.decor.door.DoorUpOpened;
 
 import java.util.Collection;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class World {
     public Position findDoorDown() throws PositionNotFoundException {
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
-                if (raw[y][x] == WorldEntity.DoorPrevOpened) {
+                if (this.get(new Position(x,y)) instanceof DoorDown) {
                     return new Position(x, y);
                 }
             }
@@ -49,7 +51,7 @@ public class World {
     public Position findDoorUpOpened() throws PositionNotFoundException {
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
-                if (raw[y][x] == WorldEntity.DoorNextOpened) {
+                if (this.get(new Position(x,y)) instanceof DoorUpOpened) {
                     return new Position(x, y);
                 }
             }
