@@ -44,7 +44,7 @@ public class Bomb extends GameObject{
 	}
 	
 	public void explode(long now) {
-		World w = this.game.getWorld();
+		World w = this.game.getTabWorld()[this.levelIndice];
 		Direction[] dirTab = {Direction.N, Direction.E, Direction.S, Direction.W};
 		Position[] explosionTab = new Position[this.scope*dirTab.length];
 		Position pos = this.getPosition();
@@ -123,7 +123,7 @@ public class Bomb extends GameObject{
 		//clear explosion's sprites
 		if(delta>=5) {
 			this.state = -1;
-			World w = this.game.getWorld();
+			World w = this.game.getTabWorld()[this.levelIndice];
 			for(Position p:this.eTab) {
 				if(p!=null) {
 					w.clear(p);
@@ -131,6 +131,14 @@ public class Bomb extends GameObject{
 			}
 			w.changed();
 		}
+	}
+	
+	public int getLevelIndice() {
+		return this.levelIndice;
+	}
+	
+	public Position[] getExplosionTab() {
+		return this.eTab;
 	}
 	
 }

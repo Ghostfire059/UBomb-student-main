@@ -5,30 +5,12 @@
 package fr.ubx.poo.game;
 
 
-import static fr.ubx.poo.game.WorldEntity.BombNumberDec;
-import static fr.ubx.poo.game.WorldEntity.BombNumberInc;
-import static fr.ubx.poo.game.WorldEntity.BombRangeDec;
-import static fr.ubx.poo.game.WorldEntity.BombRangeInc;
-import static fr.ubx.poo.game.WorldEntity.Box;
-import static fr.ubx.poo.game.WorldEntity.DoorNextClosed;
-import static fr.ubx.poo.game.WorldEntity.Empty;
-import static fr.ubx.poo.game.WorldEntity.Heart;
-import static fr.ubx.poo.game.WorldEntity.Key;
-import static fr.ubx.poo.game.WorldEntity.Monster;
-import static fr.ubx.poo.game.WorldEntity.Player;
-import static fr.ubx.poo.game.WorldEntity.Princess;
-import static fr.ubx.poo.game.WorldEntity.Stone;
-import static fr.ubx.poo.game.WorldEntity.Tree;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Optional;
 import java.util.Properties;
 
-import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.*;
 
 public class Game {
@@ -203,6 +185,10 @@ public class Game {
     
     public int getNbrLevels() {
     	return this.nbrLevels;
+    }
+    
+    public World[] getTabWorld() {
+    	return this.tabWorld;
     }
 
 }

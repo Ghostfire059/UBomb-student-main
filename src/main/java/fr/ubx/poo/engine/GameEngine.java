@@ -10,6 +10,7 @@ import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.decor.Explosion;
 import fr.ubx.poo.model.decor.door.DoorUpClosed;
 import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.*;
@@ -86,6 +87,20 @@ public final class GameEngine {
         for(int i=0; i<nbMonsters; i++) {
         	if(monsters[this.game.getIndice()][i]!=null) {
         		this.spriteMonsters[this.game.getIndice()][i] = SpriteFactory.createMonster(layer, monsters[this.game.getIndice()][i]);        		
+        	}
+        }
+        Bomb[] tabBombs = this.game.getPlayer().getTabBombs(); 
+        for(int i=0; i<tabBombs.length; i++) {
+        	if(tabBombs[i]!=null && tabBombs[i].getLevelIndice()==this.game.getIndice()) {
+        		this.spriteBomb[this.game.getIndice()][i] = SpriteFactory.createBomb(layer, tabBombs[i]);
+        		Position[] eTab = tabBombs[i].getExplosionTab();
+        		if(eTab!=null) {
+        			for(int j=0; j<eTab.length; j++) {
+        				if(eTab[j]!=null) {        				
+        					sprites.add(SpriteFactory.createDecor(layer, eTab[j], new Explosion()));
+        				}
+        			}
+        		}
         	}
         }
     }
@@ -186,7 +201,7 @@ public final class GameEngine {
     		Bomb b = tabBombs[i];
     		if(b!=null) {
     			b.update(now);
-    			if(b.getState()==0) {  
+    			if(b.getState()<=0) {  
     				if(this.spriteBomb[this.game.getIndice()][i]!=null) {
     					this.spriteBomb[this.game.getIndice()][i].remove();
     					this.spriteBomb[this.game.getIndice()][i]=null;
@@ -206,6 +221,13 @@ public final class GameEngine {
     		initialize(stage, game);
     	}
     	
+    	if(game.getWorld().hasChanged()) {
+    		sprites.forEach(Sprite::remove);
+    		sprites.clear();
+    		initialize(stage, game);
+    		game.getWorld().changed();
+    	}
+    	
         if (player.isAlive() == false) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
@@ -215,12 +237,6 @@ public final class GameEngine {
             showMessage("Gagné", Color.BLUE);
         }
         
-        if(game.getWorld().hasChanged()) {
-        	sprites.forEach(Sprite::remove);
-        	sprites.clear();
-        	initialize(stage, game);
-        	game.getWorld().changed();
-        }
     }
 
     private void render() {
