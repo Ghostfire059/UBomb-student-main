@@ -13,12 +13,14 @@ public class DoorUpClosed extends DoorUp{
 
 	@Override
 	public void crossIt(Player player) {
-		World w = player.getGame().getWorld();
-		player.loseKeys();
-		Position pos = player.getDirection().nextPosition(player.getPosition());
-    	w.clear(pos);
-    	w.set(pos, new DoorUpOpened() );
-		w.changed();
+		if( player.getKeys() > 0) {
+			World w = player.getGame().getWorld();
+			player.loseKeys();
+			Position pos = player.getDirection().nextPosition(player.getPosition());
+	    	w.clear(pos);
+	    	w.set(pos, new DoorUpOpened() );
+			w.changed();
+		}
 	}
 	
 }
