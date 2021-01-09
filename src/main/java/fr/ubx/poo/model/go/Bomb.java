@@ -96,7 +96,9 @@ public class Bomb extends GameObject{
 			}
 		}
 		//switch world's state to display the new sprites c.f. world.update();
-		w.changed();
+		if(!w.hasChanged()) {			
+			w.changed();
+		}
 		this.eTab=explosionTab;
 		this.exploded = true;
 	}
@@ -129,7 +131,9 @@ public class Bomb extends GameObject{
 					w.clear(p);
 				}
 			}
-			w.changed();
+			if(!w.hasChanged()) {			
+				w.changed();
+			}
 		}
 	}
 	
