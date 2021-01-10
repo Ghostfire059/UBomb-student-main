@@ -1,6 +1,5 @@
 package fr.ubx.poo.model.decor.door;
 
-import fr.ubx.poo.game.PositionNotFoundException;
 import fr.ubx.poo.model.go.character.Player;
 
 public class DoorDown extends Door{

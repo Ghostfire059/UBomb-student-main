@@ -25,15 +25,11 @@ public class StatusBar {
     private Text keyValue = new Text();
     private HBox level = new HBox();
     private int gameLevel;
-
-    private final Game game;
     private final DropShadow ds = new DropShadow();
-
 
 
     public StatusBar(Group root, int sceneWidth, int sceneHeight, Game game) {
         // Status bar
-        this.game = game;
         this.gameLevel = game.getWorld().level;
 
         level.getStyleClass().add("level");

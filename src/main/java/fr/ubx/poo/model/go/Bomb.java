@@ -3,20 +3,9 @@ package fr.ubx.poo.model.go;
 import fr.ubx.poo.game.Game;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.World;
-import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.decor.Explosion;
-import fr.ubx.poo.model.decor.Heart;
-import fr.ubx.poo.model.decor.Stone;
-import fr.ubx.poo.model.decor.Tree;
-import fr.ubx.poo.model.decor.door.DoorDown;
-import fr.ubx.poo.model.decor.door.DoorUpClosed;
-import fr.ubx.poo.model.decor.door.DoorUpOpened;
 import fr.ubx.poo.model.go.character.Monster;
-import fr.ubx.poo.model.decor.bomb.BombNbDec;
-import fr.ubx.poo.model.decor.bomb.BombNbInc;
-import fr.ubx.poo.model.decor.bomb.BombRngDec;
-import fr.ubx.poo.model.decor.bomb.BombRngInc;
 import fr.ubx.poo.game.Direction;
 
 public class Bomb extends GameObject{
