@@ -53,8 +53,12 @@ public final class GameEngine {
         this.monsters = game.getMonsters();
         this.spriteMonsters = new Sprite[this.game.getNbrLevels()][];
         initialize(stage, game);
-       	int nbrBombMax = 3+this.game.getWorld().findNbrBombMax();     	
+        int nbrBombMax = this.game.getInitPlayerBombs();
+        for(int i=0; i<this.game.getNbrLevels(); i++) {
+        	nbrBombMax+=this.game.getTabWorld()[i].findNbrBombMax();
+        }
         this.spriteBomb = new Sprite[this.game.getNbrLevels()][nbrBombMax];
+        //sysout
         buildAndSetGameLoop();
     }
 
